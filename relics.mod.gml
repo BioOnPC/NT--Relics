@@ -342,7 +342,7 @@
 
 #define EliteSniper_draw
 	if(alarm2) {
-		draw_set_color(c_red);
+		draw_set_color(make_color_rgb(250, 54, 0));
 		draw_lasersight(x, y, gunangle, 1000, 1);
 		draw_set_color(c_white);
 	}
