@@ -1,5 +1,5 @@
 #define init
-	global.obj_list = ["AnglerFish", "EliteSniperDeath", "EliteSniper"];
+	global.obj_list = ["AnglerFish", "EliteSniperDeath", "EliteSniper", "Guppy", "HeavyBandit", "Jelly"];
 
 	global.spr = {};
 	
@@ -10,24 +10,44 @@
 		//#region ENEMIES
 			_s = _p + "Enemies/";
 		
+			//#region DESERT
+				 // Heavy Bandit
+				HeavyBanditIdle = sprite_add(_s + "HeavyBandit/sprHeavyBanditIdle.png", 4, 12, 12);
+				HeavyBanditWalk = sprite_add(_s + "HeavyBandit/sprHeavyBanditWalk.png", 6, 12, 12);
+				HeavyBanditHurt = sprite_add(_s + "HeavyBandit/sprHeavyBanditHurt.png", 3, 12, 12);
+				HeavyBanditDead = sprite_add(_s + "HeavyBandit/sprHeavyBanditDead.png", 7, 12, 12);
+			//#endregion
+			
 			//#region SCRAPYARD
+				 // Elite Sniper
 				EliteSniperIdle = sprite_add(_s + "EliteSniper/sprEliteSniperIdle.png", 4, 16, 16);
 				EliteSniperWalk = sprite_add(_s + "EliteSniper/sprEliteSniperWalk.png", 6, 16, 16);
 				EliteSniperHurt = sprite_add(_s + "EliteSniper/sprEliteSniperHurt.png", 3, 16, 16);
 				EliteSniperDead = sprite_add(_s + "EliteSniper/sprEliteSniperDead.png", 6, 16, 16);
+				EliteSniperWeap = sprite_add(_s + "EliteSniper/sprEliteSniperRifle.png", 1, 17, 6);
 			//#endregion
 			
 			//#region DROWNED CITY
+				 // Anglerfish
+				AnglerFishIdle = sprite_add(_s + "AnglerFish/sprAnglerFishIdle.png", 4, 12, 12);
+				AnglerFishWalk = sprite_add(_s + "AnglerFish/sprAnglerFishWalk.png", 4, 12, 12);
+				AnglerFishHurt = sprite_add(_s + "AnglerFish/sprAnglerFishHurt.png", 3, 12, 12);
+				AnglerFishDead = sprite_add(_s + "AnglerFish/sprAnglerFishDead.png", 6, 12, 12);
+			
 				 // Blowfish
 				BlowFishIdle = sprite_add(_s + "BlowFish/sprBlowFishIdle.png", 4, 12, 12);
 				BlowFishWalk = sprite_add(_s + "BlowFish/sprBlowFishWalk.png", 6, 12, 12);
 				BlowFishHurt = sprite_add(_s + "BlowFish/sprBlowFishHurt.png", 3, 12, 12);
 				
-				 // AnglerFish
-				AnglerFishIdle = sprite_add(_s + "AnglerFish/sprAnglerFishIdle.png", 4, 12, 12);
-				AnglerFishWalk = sprite_add(_s + "AnglerFish/sprAnglerFishWalk.png", 4, 12, 12);
-				AnglerFishHurt = sprite_add(_s + "AnglerFish/sprAnglerFishHurt.png", 3, 12, 12);
-				AnglerFishDead = sprite_add(_s + "AnglerFish/sprAnglerFishDead.png", 6, 12, 12);
+				 // Guppy
+				GuppyIdle = sprite_add(_s + "Guppy/sprGuppyIdle.png", 6, 12, 12);
+				GuppyHurt = sprite_add(_s + "Guppy/sprGuppyHurt.png", 3, 12, 12);
+				GuppyDead = sprite_add(_s + "Guppy/sprGuppyDead.png", 11, 12, 12); 
+				
+				 // Jelly
+				JellyIdle = sprite_add(_s + "Jelly/sprJellyIdle.png", 12, 32, 32);
+				JellyHurt = sprite_add(_s + "Jelly/sprJellyHurt.png", 3, 32, 32);
+				JellyDead = sprite_add(_s + "Jelly/sprJellyDead.png", 7, 32, 32);
 			//#endregion
 		
 		//#endregion
@@ -122,6 +142,27 @@
 			instance_delete(self);
 		}
 	}
+	
+	with(instances_matching(Bandit, "eliteified", null)) {
+		eliteified = true;
+		if(instance_exists(GameCont) and GameCont.area = 1 and chance(min(1 + (instance_exists(GameCont) ? GameCont.loops * 3 : 0), 10), 20)) {
+			obj_create(x, y, "HeavyBandit");
+			instance_delete(self);
+		}
+	}
+	
+	if(instance_exists(GameCont) and GameCont.area = 101) with(instances_matching(Crab, "jellified", null)) {
+		jellified = true;
+		if(chance(1, 3)) obj_create(x, y, "Jelly");
+	}
+
+#define draw_dark
+	draw_set_color($808080);
+	with(instances_matching(CustomEnemy, "name", "AnglerFish")) draw_circle(x + (lengthdir_x(12 * right, image_angle)), y + lengthdir_y(8, image_angle), 8 + random(2), false);
+
+#define draw_dark_end
+	draw_set_color($000000);
+	with(instances_matching(CustomEnemy, "name", "AnglerFish")) draw_circle(x + (lengthdir_x(12 * right, image_angle)), y + lengthdir_y(8, image_angle), 4 + random(2), false);
 
 #define cleanup
 	global.spr = null;
@@ -135,6 +176,7 @@
 		spr_dead   = spr.AnglerFishDead;
 		spr_shadow = shd24;
 		hitid      = [spr_idle, "ANGLER FISH"];
+		depth      = -2;
 
 		 // Sound:
 		snd_hurt = sndOasisHurt;
@@ -184,6 +226,8 @@
 				fx(x, y, [gunangle + 180 + orandom(20), 1 + random(2)], FishBoost);
 			}
 			
+			fx(x, y, 0, AssassinNotice);
+			
 			direction = gunangle;
 			
 			if(fork()) {
@@ -230,10 +274,11 @@
 		spr_walk   = spr.EliteSniperWalk;
 		spr_hurt   = spr.EliteSniperHurt;
 		spr_dead   = mskNone;
-		spr_weap   = sprSniperGun;
+		spr_weap   = spr.EliteSniperWeap;
 		spr_shadow = shd24;
 		spr_shadow_y += 2;
 		hitid      = [spr_idle, "ELITE SNIPER"];
+		depth      = -2;
 
 		 // Sound:
 		snd_hurt = sndSniperHit;
@@ -347,12 +392,10 @@
 		draw_set_color(c_white);
 	}
 
-	if(gunangle <= 180) draw_weapon(spr_weap, 0, x, y, gunangle, 0, wkick, right, image_blend, image_alpha);
-	draw_self_enemy();
-	if(gunangle > 180) draw_weapon(spr_weap, 0, x, y, gunangle, 0, wkick, right, image_blend, image_alpha);
+	draw_self_gun();
 
 #define EliteSniper_death
-	obj_create(x, y, "EliteSniperDeath");
+	obj_create(x, y, "EliteSniperDeath").depth = depth;
 
 #define EliteSniperDeath_create(_x, _y)
 	with(instance_create(_x, _y, CustomHitme)) {
@@ -411,6 +454,238 @@
 	instance_create(x, y, Explosion);
 	repeat(3) instance_create(x, y, SmallExplosion);
 	corpse_drop(self, direction, max(7, speed));
+	pickup_drop(60, 10, 2);
+
+#define Guppy_create(_x, _y)
+	with(instance_create(_x, _y, CustomEnemy)) {
+		 // Visual:
+		spr_idle   = spr.GuppyIdle;
+		spr_walk   = spr_idle;
+		spr_hurt   = spr.GuppyHurt;
+		spr_dead   = spr.GuppyDead;
+		spr_shadow = shd16;
+		hitid      = [spr_idle, "GUPPY"];
+		depth      = -2;
+
+		 // Sound:
+		snd_hurt = sndOasisHurt;
+		snd_dead = sndOasisDeath;
+		
+		 // Vars:
+		mask_index  = mskBigRad;
+		maxhealth   = 8;
+		raddrop     = 3;
+		size        = 0;
+		walk	    = 0;
+		walkspeed   = 0.4;
+		maxspeed    = 2.8;
+		direction   = random(360);
+		meleedamage = 2;
+		
+		 // Alarms:
+		alarm1 = 30 + irandom(15);
+		
+		return self;
+	}
+
+#define Guppy_step
+	if(instance_exists(target) and target_visible) {
+		motion_add(direction - (angle_difference(direction, point_direction(x, y, target.x, target.y)) * 0.3), walkspeed);
+		enemy_face(direction);
+	}
+	
+	enemy_step();
+
+#define Guppy_alrm1
+	alarm1 = 10 + irandom(5);
+	
+	if(enemy_target(x, y) and target_visible) {
+		enemy_walk(direction, alarm1);
+	}
+	
+	else {
+		direction = random(360);
+		enemy_walk(direction, alarm1);
+	}
+	
+	enemy_face(direction);
+
+#define Guppy_death
+	pickup_drop(10, 0);
+
+#define HeavyBandit_create(_x, _y)
+	with(instance_create(_x, _y, CustomEnemy)) {
+		 // Visual:
+		spr_idle   = spr.HeavyBanditIdle;
+		spr_walk   = spr.HeavyBanditWalk;
+		spr_hurt   = spr.HeavyBanditHurt;
+		spr_dead   = spr.HeavyBanditDead;
+		spr_weap   = sprBanditGun;
+		spr_shadow = shd24;
+		hitid      = [spr_idle, "HEAVY BANDIT"];
+		depth      = -2;
+
+		 // Sound:
+		snd_hurt = sndMolefishHurt;
+		snd_dead = sndMolefishDead;
+		
+		 // Vars:
+		mask_index  = mskBandit;
+		maxhealth   = 12;
+		raddrop     = 5;
+		size        = 1;
+		walk	    = 0;
+		walkspeed   = 0.8;
+		maxspeed    = 3.4;
+		gunangle    = random(360);
+		direction   = gunangle;
+		
+		 // Alarms:
+		alarm1 = 50 + irandom(20);
+		
+		return self;
+	}
+
+#define HeavyBandit_step
+	enemy_step();
+	if(alarm2_run) exit;
+	
+	if(alarm2) {
+		if(enemy_target(x, y)) {
+			gunangle = target_direction;
+			direction = gunangle;
+			enemy_face(gunangle);
+		}
+	}
+
+#define HeavyBandit_alrm1
+	alarm1 = 20 + irandom(20);
+	
+	if(enemy_target(x, y) and target_visible) {
+		if(target_distance < 128) {
+			if(target_distance > 32 and chance(1, 3)) {
+				alarm1 = 30 + irandom(20);
+				gunangle = target_direction + orandom(10);
+				direction = gunangle;
+				
+				fx(x, y, 0, WepSwap).depth = depth - 1;
+				fx(x, y, 0, AssassinNotice);
+				
+				alarm2 = 16 + irandom(8);
+				
+				sound_play_pitchvol(sndSwapPistol, 1.2 + random(0.2), 0.4);
+			}
+			
+			else {
+				gunangle = target_direction + orandom(40) + 180;
+				enemy_walk(gunangle, alarm1 - 10);
+			}
+		}
+		
+		else {
+			gunangle = target_direction + orandom(20);
+			enemy_walk(gunangle, alarm1 - 10);
+		}
+	}
+	
+	else {
+		gunangle = random(360);
+		enemy_walk(gunangle, alarm1 - 10);
+	}
+	
+	enemy_face(direction);
+
+#define HeavyBandit_alrm2
+	repeat(3 + irandom(2)) {
+		fx(x, y, [gunangle + orandom(10), 2 + random(3)], Smoke)
+		sound_play_pitch(sndMolefishFire, 1 + random(0.2));
+	}
+
+	if(fork()) {
+		repeat(3) {
+			if(!instance_exists(self)) exit;
+			
+			if(enemy_target(x, y)) {
+				gunangle = target_direction + orandom(15);
+			}
+			
+			else {
+				gunangle += orandom(20);
+			}
+			
+			projectile_create(self, x, y, EnemyBullet1, gunangle, 4);
+			sound_play_pitch(sndEnemyFire, 1 + random(0.2));
+			direction = gunangle;
+			motion_add(direction + 180, 1);
+			
+			wait 2 + irandom(3);
+		}
+		
+		exit;
+	}
+
+#define HeavyBandit_draw
+	draw_self_gun();
+	
+#define Jelly_create(_x, _y)
+	with(instance_create(_x, _y, CustomEnemy)) {
+		 // Visual:
+		spr_idle   = spr.JellyIdle;
+		spr_walk   = spr_idle;
+		spr_hurt   = spr.JellyHurt;
+		spr_dead   = spr.JellyDead;
+		spr_shadow = shd32;
+		spr_shadow_y += 12;
+		hitid      = [spr_idle, "JELLY"];
+		depth      = -3;
+
+		 // Sound:
+		snd_hurt = sndOasisHurt;
+		snd_dead = sndOasisDeath;
+		
+		 // Vars:
+		mask_index  = mskBanditBoss;
+		maxhealth   = 60;
+		raddrop     = 16;
+		size        = 0;
+		walk	    = 0;
+		walkspeed   = 1;
+		maxspeed    = 2.5;
+		direction   = random(360);
+		meleedamage = 4;
+		
+		 // Alarms:
+		alarm1 = 40 + irandom(20);
+		
+		return self;
+	}
+
+#define Jelly_alrm1
+	alarm1 = 60 + irandom(10);
+	
+	if(enemy_target(x, y) and target_visible) {
+		direction = target_direction + orandom(40);
+		enemy_walk(direction, ceil(alarm1/2));
+	}
+	
+	else {
+		direction = random(360);
+		enemy_walk(direction, ceil(alarm1/2));
+	}
+	
+	enemy_face(direction);
+	
+#define Jelly_death
+	repeat(3 + irandom(3)) {
+		with(obj_create(x, y, "Guppy")) motion_add(random(360), 4);
+	}
+	
+	if(chance(1, 2)) obj_create(x, y, BoneFish);
+	
+	fx(x, y, 0, ExploderExplo);
+	pickup_drop(70, 20, 2);
+	
+	sound_play_pitch(sndOasisExplosionSmall, 0.6 + random(0.2));
 
 #define goldsalamander_create(_x,_y)
 with instance_create(_x,_y,CustomEnemy){
@@ -585,6 +860,7 @@ sound_stop(sndSalamanderCharge)
 #define chance_ct(_numer, _denom)                                                       		return  random(_denom) < _numer * current_time_scale;
 #define orandom(_num)                                                                   		return  random_range(-_num, _num);
 #define draw_self_enemy()                                                                       image_xscale *= right; draw_self(); image_xscale /= right;
+#define draw_self_gun()																			if(gunangle <= 180) draw_weapon(spr_weap, 0, x, y, gunangle, 0, wkick, right, image_blend, image_alpha); draw_self_enemy(); if(gunangle > 180) draw_weapon(spr_weap, 0, x, y, gunangle, 0, wkick, right, image_blend, image_alpha);
 #define enemy_walk(_dir, _num)                                                                  direction = _dir; walk = _num; if(speed < friction) speed = friction;
 #define enemy_face(_dir)                                                                        _dir = ((_dir % 360) + 360) % 360; if(_dir < 90 || _dir > 270) right = 1; else if(_dir > 90 && _dir < 270) right = -1;
 #define enemy_look(_dir)                                                                        _dir = ((_dir % 360) + 360) % 360; if(_dir < 90 || _dir > 270) right = 1; else if(_dir > 90 && _dir < 270) right = -1; if('gunangle' in self) gunangle = _dir;
