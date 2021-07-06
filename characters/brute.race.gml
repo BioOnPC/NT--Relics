@@ -218,6 +218,12 @@
 					if(_hit[1]) {
 						if(random(4) < 1) instance_create(x, y, skill_get(mut_throne_butt) ? AcidStreak : BloodStreak).image_angle = gunangle + orandom(10);
 					}
+					
+					with(instances_in_rectangle(x-25,y-25,x+25,y+25,Rad)){
+						move_contact_solid(other.gunangle, 2);
+						motion_add(other.gunangle,4/power(sqr(x-other.x) + sqr(y-other.y), 0.25));
+						speed = min(speed, 12);
+					}
 				}
 				
 				if(_hit[0]) {
