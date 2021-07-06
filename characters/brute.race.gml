@@ -21,7 +21,20 @@
 	return "CAN ONLY DIE AT @r1 HP@w#IS SLOWER#CAN @rPUNCH@w";
 
 #define race_tb_text
-	return "@dNYI@s";
+	return "@gNUCLEAR@s PUNCH";
+
+#define race_tb_take(_pick)
+	with(instances_matching(Player, "race", "brute")) {
+		if(_pick) {
+			chrg_max  = 8;
+			chrg_mult = 0.1 * _pick;
+		}
+		
+		else {
+			chrg_max = 4;
+			chrg_mult = 0.06;
+		}
+	}
 
 #define race_portrait
 	return global.sprPort;
@@ -34,14 +47,18 @@
 
 #define race_ultra_name
 	switch(argument0){
-		case 1: return "ULTRA A";
+		case 1: return "RUSHDOWN";
 		case 2: return "ULTRA B";
+		case 3: if(mod_exists("mod", "metamorphosis")) return "ULTRA C";
+		case 4: if(mod_exists("mod", "LOMutsSprites")) return "ULTRA D";
 	}
 
 #define race_ultra_text 
 	switch (argument0){
-		case 1: return "@dNYI@s";
-		case 2: return "@dNYI@s";
+		case 1: return "@rPUNCH KILLS@s GRANT @wINVULNERABILITY@s#@dNYI@s";
+		case 2: return "@wABSORB@s AND @wRETURN@s#BULLETS DESTROYED BY YOUR @rPUNCH@s#@dNYI@s";
+		case 3: if(mod_exists("mod", "metamorphosis")) return "@wSTUN@s NEARBY ENEMIES#AFTER TAKING @rLETHAL DAMAGE@s#@dNYI@s";
+		case 4: if(mod_exists("mod", "LOMutsSprites")) return "@dNYI@s";
 	}
 	
 #define race_mapicon
@@ -60,10 +77,12 @@
 	maxspeed -= 0.5;
 	
 	fist_chrg = 0;
-	chrg_max  = 4;
-	chrg_mult = 0.06;
+	chrg_max  = (skill_get(mut_throne_butt) ? 8 : 4);
+	chrg_mult = (skill_get(mut_throne_butt) ? 0.1 : 0.06);
 	
 	brutedie = 1;
+	
+	footkind = 3; // cool footstep sounds
 
 #define step
 	if(fork()) {
@@ -108,7 +127,7 @@
 			var diff = fist_chrg
 			fist_chrg += chrg_mult;
 			
-			if(diff < 2 and fist_chrg > 2) {
+			if(diff < 2 and fist_chrg >= 2) {
 				sound_play_pitch(sndEmpty, 1.4 + random(0.4));
 				sound_play_pitch(sndSwapBow, 1.4 + random(0.4));
 				
@@ -116,6 +135,18 @@
 					depth = depth - 1;
 					image_xscale = 0.5;
 					image_yscale = 0.5;
+				}
+			}
+			
+			if(skill_get(mut_throne_butt) and (diff < 4 and fist_chrg >= 4)) {
+				sound_play_pitch(sndUltraGrenadeSuck, 1.4 + random(0.4));
+				sound_play_pitch(sndSwapEnergy, 0.6 + random(0.2));
+				sound_play_pitch(sndDevastatorExplo, 1.8 + random(0.4));
+				
+				with(instance_create(x, y, ImpactWrists)) {
+					depth = depth - 1;
+					image_xscale = 0.75;
+					image_yscale = 0.75;
 				}
 			}
 			
@@ -128,6 +159,10 @@
 				fist_chrg = chrg_max;
 				sound_play_pitch(sndSwapMotorized, 0.6 + random(0.2));
 				sound_play_pitch(sndSwapBow, 0.4 + random(0.2));
+				if(skill_get(mut_throne_butt)) {
+					sound_play_pitch(sndGunGun, 0.6 + random(0.2));
+					sound_play_pitchvol(sndSwapCursed, 0.6 + random(0.2), 2);
+				}
 				
 				with(instance_create(x, y, ChickenB)) {
 					depth = depth - 1;
@@ -175,13 +210,13 @@
 					}
 					
 					repeat(1 + irandom(2)) {
-						with(instance_create(x, y, Dust)) {
+						with(instance_create(x, y, skill_get(mut_throne_butt) ? Smoke : Dust)) {
 							motion_add(other.gunangle + 180 + orandom(10), 4 + random(4));
 						}
 					}
 					
 					if(_hit[1]) {
-						if(random(4) < 1) instance_create(x, y, BloodStreak).image_angle = gunangle + orandom(10);
+						if(random(4) < 1) instance_create(x, y, skill_get(mut_throne_butt) ? AcidStreak : BloodStreak).image_angle = gunangle + orandom(10);
 					}
 				}
 				
@@ -214,6 +249,24 @@
 					damage = 4;
 					if(instance_is(self, BloodSlash)) damaged = 1;
 				}
+				
+				if(skill_get(mut_throne_butt) and fist_chrg >= chrg_max) {
+					repeat(skill_get(mut_throne_butt)) {
+						with(instance_create(x, y, GreenExplosion)) {
+							team = other.team;
+						}
+						
+						repeat(3) with(instance_create(x, y, SmallExplosion)) {
+							team = other.team;
+						}
+					}
+					
+					sound_play_pitch(sndExplosionL, 0.6 + random(0.2));
+					sound_play_pitch(sndUltraGrenade, 1.2 + random(0.4));
+					sound_play_pitch(sndUltraEmpty, 0.4 + random(0.2));
+				}
+				
+				motion_add(gunangle, maxspeed);
 				
 				sound_play_pitch(sndNadeReload, 0.7 + random(0.2));
 				sound_play_pitch(sndSuperFlakExplode, 1.4 + random(0.2));
@@ -255,7 +308,10 @@
 	}
 
 #define draw
-	draw_sprite_ext(global.sprHand, (min(abs(fist_chrg), 1)/1) * 3, x - lengthdir_x(fist_chrg * 2, gunangle) + (orandom(fist_chrg) * 0.40), y - lengthdir_y(fist_chrg * 2, gunangle) + (orandom(fist_chrg) * 0.40), 1, right, gunangle + (fist_chrg * 3), image_blend, abs(fist_chrg)/0.75);
+	var pos = [x - lengthdir_x(fist_chrg * 2, gunangle) + (orandom(fist_chrg) * 0.40), y - lengthdir_y(fist_chrg * 2, gunangle) + (orandom(fist_chrg) * 0.40)];
+
+	draw_sprite_ext(global.sprHand, (min(abs(fist_chrg), 1)/1) * 3, pos[0], pos[1], 1, right, gunangle + (fist_chrg * 3), image_blend, abs(fist_chrg)/0.75);
+	draw_sprite_ext(sprGroundFlameBig, -1, pos[0], pos[1] - 3, right, image_yscale, image_angle, c_lime, (fist_chrg - 4)/chrg_max);
 
 #define assign_sprites
 	if(object_index = Player) {

@@ -1,5 +1,5 @@
 #define init
-	global.obj_list = ["AnglerFish", "EliteSniperDeath", "EliteSniper", "Guppy", "HeavyBandit", "Jelly"];
+	global.obj_list = ["AnglerFish", "CubeGuardian", "EliteSniperDeath", "EliteSniper", "Guppy", "HeavyBandit", "Jelly", "SmallDog", "SodaBullet", "SodaMimic", "ShieldSpider"];
 
 	global.spr = {};
 	
@@ -25,14 +25,52 @@
 				EliteSniperHurt = sprite_add(_s + "EliteSniper/sprEliteSniperHurt.png", 3, 16, 16);
 				EliteSniperDead = sprite_add(_s + "EliteSniper/sprEliteSniperDead.png", 6, 16, 16);
 				EliteSniperWeap = sprite_add(_s + "EliteSniper/sprEliteSniperRifle.png", 1, 17, 6);
+				
+				 // Small Dog
+				SmallDogIdle = sprite_add(_s + "SmallDog/sprSmallDogIdle.png", 6, 12, 12);
+				SmallDogWalk = sprite_add(_s + "SmallDog/sprSmallDogWalk.png", 6, 12, 12);
+				SmallDogHurt = sprite_add(_s + "SmallDog/sprSmallDogHurt.png", 3, 12, 12);
+				SmallDogDead = sprite_add(_s + "SmallDog/sprSmallDogDead.png", 6, 12, 12);
+			//#endregion
+			
+			//#region CRYSTAL CAVES
+				 // Shield Spider
+				ShieldSpiderIdle		 = sprite_add(_s + "ShieldSpider/sprShieldSpiderIdle.png", 6, 24, 24);
+				ShieldSpiderWalk		 = sprite_add(_s + "ShieldSpider/sprShieldSpiderWalk.png", 6, 24, 24);
+				ShieldSpiderHurt		 = sprite_add(_s + "ShieldSpider/sprShieldSpiderHurt.png", 3, 24, 24);
+				ShieldSpiderDead		 = sprite_add(_s + "ShieldSpider/sprShieldSpiderDead.png", 6, 24, 24);
+				ShieldSpiderShield  	 = sprite_add(_s + "ShieldSpider/sprShieldSpiderShield.png", 9, 24, 24);
+				ShieldSpiderShielded     = sprite_add(_s + "ShieldSpider/sprShieldSpiderShielded.png", 1, 24, 24);
+				ShieldSpiderShieldedHurt = sprite_add(_s + "ShieldSpider/sprShieldSpiderShieldedHurt.png", 3, 24, 24);
+				ShieldSpiderOff     	 = sprite_add(_s + "ShieldSpider/sprShieldSpiderShieldOff.png", 3, 24, 24);
+			//#endregion
+			
+			//#region FROZEN CITY
+				 // Soda Mimic
+				SodaMimicIdle = sprite_add(_s + "SodaMimic/sprSodaMimicIdle.png", 1, 16, 16);
+				SodaMimicWalk = sprite_add(_s + "SodaMimic/sprSodaMimicWalk.png", 4, 16, 16);
+				SodaMimicHurt = sprite_add(_s + "SodaMimic/sprSodaMimicHurt.png", 3, 16, 16);
+				SodaMimicDead = sprite_add(_s + "SodaMimic/sprSodaMimicDead.png", 6, 16, 16);
+				SodaMimicTell = sprite_add(_s + "SodaMimic/sprSodaMimicTell.png", 13, 16, 16);
+			//#endregion
+			
+			//#region PALACE
+				 // Cube Guardian
+				CubeGuardianWalk		 = sprite_add(_s + "CubeGuardian/sprCubeGuardianWalk.png", 6, 32, 32);
+				CubeGuardianHurt		 = sprite_add(_s + "CubeGuardian/sprCubeGuardianHurt.png", 3, 32, 32);
+				CubeGuardianDead		 = sprite_add(_s + "CubeGuardian/sprCubeGuardianDead.png", 9, 32, 32);
+				CubeGuardianFireStart  	 = sprite_add(_s + "CubeGuardian/sprCubeGuardianFireStart.png", 9, 32, 64);
+				CubeGuardianFire         = sprite_add(_s + "CubeGuardian/sprCubeGuardianFire.png", 4, 32, 64);
+				CubeGuardianFireHurt     = sprite_add(_s + "CubeGuardian/sprCubeGuardianFireHurt.png", 4, 32, 64);
+				CubeGuardianFireEnd      = sprite_add(_s + "CubeGuardian/sprCubeGuardianFireEnd.png", 9, 32, 64);
 			//#endregion
 			
 			//#region DROWNED CITY
 				 // Anglerfish
-				AnglerFishIdle = sprite_add(_s + "AnglerFish/sprAnglerFishIdle.png", 4, 12, 12);
-				AnglerFishWalk = sprite_add(_s + "AnglerFish/sprAnglerFishWalk.png", 4, 12, 12);
-				AnglerFishHurt = sprite_add(_s + "AnglerFish/sprAnglerFishHurt.png", 3, 12, 12);
-				AnglerFishDead = sprite_add(_s + "AnglerFish/sprAnglerFishDead.png", 6, 12, 12);
+				AnglerFishIdle = sprite_add(_s + "AnglerFish/sprAnglerFishIdle.png", 11, 15, 18);
+				AnglerFishWalk = sprite_add(_s + "AnglerFish/sprAnglerFishWalk.png", 6, 15, 19);
+				AnglerFishHurt = sprite_add(_s + "AnglerFish/sprAnglerFishHurt.png", 3, 15, 18);
+				AnglerFishDead = sprite_add(_s + "AnglerFish/sprAnglerFishDead.png", 6, 15, 18);
 			
 				 // Blowfish
 				BlowFishIdle = sprite_add(_s + "BlowFish/sprBlowFishIdle.png", 4, 12, 12);
@@ -65,6 +103,8 @@
 			mod_script_call("mod", _mod[i], _scr);
 		}
 	}
+	
+	global.level_loading = false;
 
 #define init_variants
 	area_variant_add(50, 1, "night desert", ["so cold", "cold-blooded", "ambush", "so quiet"], -1, -1, -1);
@@ -150,8 +190,45 @@
 	 // Important:
 	return o;
 
-#define step
+#define level_start
+	if(instance_exists(GameCont) and GameCont.area = 101) with(instances_matching(Crab, "jellified", null)) {
+		jellified = true;
+		if(chance(1, 3)) obj_create(x, y, "Jelly");
+	}
 	
+	with(instances_matching(SodaMachine, "mimicified", null)) {
+		mimicified = true;
+		if(chance(1, 10)) {
+			obj_create(x, y, "SodaMimic");
+			instance_delete(self);
+		}
+	}
+	
+	with(instances_matching(Raven, "smalldogified", null)) {
+		smalldogified = true;
+		if(chance(1, 5)) {
+			obj_create(x, y, "SmallDog");
+			instance_delete(self);
+		}
+	}
+	
+	with(instances_matching(ExploGuardian, "cubed", null)) {
+		cubed = true;
+		if(chance(1, 3)) {
+			obj_create(x, y, "CubeGuardian");
+			instance_delete(self);
+		}
+	}
+
+#define step
+	if(instance_exists(GenCont) || instance_exists(Menu)){
+        global.level_loading = true;
+    }
+    else if(global.level_loading){
+        global.level_loading = false;
+        level_start();
+    }
+
 	with(instances_matching(Sniper, "eliteified", null)) {
 		eliteified = true;
 		if(chance(1 + (instance_exists(GameCont) ? GameCont.loops * 3 : 0), 20)) {
@@ -168,9 +245,12 @@
 		}
 	}
 	
-	if(instance_exists(GameCont) and GameCont.area = 101) with(instances_matching(Crab, "jellified", null)) {
-		jellified = true;
-		if(chance(1, 3)) obj_create(x, y, "Jelly");
+	with(instances_matching(Spider, "eliteified", null)) {
+		eliteified = true;
+		if(chance(1 + (instance_exists(GameCont) ? GameCont.loops * 3 : 0), 20)) {
+			obj_create(x, y, "ShieldSpider");
+			instance_delete(self);
+		}
 	}
 
  // Thanks yokin! //
@@ -298,6 +378,8 @@
 		spr_hurt   = spr.AnglerFishHurt;
 		spr_dead   = spr.AnglerFishDead;
 		spr_shadow = shd24;
+		//spr_shadow_x = -1;
+		//spr_shadow_y = ;
 		hitid      = [spr_idle, "ANGLER FISH"];
 		depth      = -2;
 
@@ -390,6 +472,159 @@
 	sound_play_pitchvol(sndSwapFlame, 2.4 + random(0.2), 0.4);
 	sound_play_pitchvol(sndFlameCannonEnd, 2.8 + random(0.2), 0.2);
 
+#define CubeGuardian_create(_x, _y)
+	with(instance_create(_x, _y, CustomEnemy)) {
+		 // Visual:
+		spr_idle   = spr.CubeGuardianWalk;
+		spr_walk   = spr.CubeGuardianWalk;
+		spr_hurt   = spr.CubeGuardianHurt;
+		spr_dead   = spr.CubeGuardianDead;
+		spr_shld   = spr.CubeGuardianFireStart;
+		spr_shadow = shd64B;
+		spr_shadow_y = 5;
+		hitid      = [spr_idle, "CUBE GUARDIAN"];
+		depth      = -3;
+
+		 // Sound:
+		snd_hurt = sndExploGuardianHurt;
+		snd_dead = sndExploGuardianDead;
+		snd_mele = sndDogGuardianMelee;
+		
+		 // Vars:
+		mask_index  = mskExploGuardian;
+		maxhealth   = 72;
+		raddrop     = 30;
+		size        = 2;
+		walk	    = 0;
+		walkspeed   = 0.6;
+		maxspeed    = 3.5;
+		direction   = random(360);
+		meleedamage = 5;
+		sucking   = false;
+		
+		 // Alarms:
+		alarm1 = 60 + irandom(15);
+		
+		return self;
+	}
+
+#define CubeGuardian_step
+	 // Alarms:
+	if("on_alrm0" in self and alarm0_run) exit;
+	if("on_alrm1" in self and alarm1_run) exit;
+	if("on_alrm2" in self and alarm2_run) exit;
+	
+	if(!sucking) {
+		 // Always moving:
+		if(walk <= 0) walk = 1;
+		
+		 // Movement:
+		if(walk > 0){
+			walk -= current_time_scale;
+			speed += walkspeed * current_time_scale;
+		}
+		if(speed > maxspeed){
+			speed = maxspeed;
+		}
+	}
+	
+	else {
+		if(sprite_index != spr_fire and chance_ct(1, 2)) {
+			sound_play_pitch(sndFrogClose, 1.4 + random(0.2));
+			sound_play_pitch(sndPickupDisappear, 1.8 + random(0.4));
+			sound_play_pitch(sndGuardianDisappear, 1.4 + random(0.4));
+			
+			repeat(irandom(3)) with(instance_create(x + orandom(80), y + orandom(80), Dust)) {
+				motion_add(point_direction(x, y, other.x, other.y), 4 + random(2));
+			}
+		}
+		
+		with(instances_in_rectangle(x - 80, y - 80, x + 80, y + 80, Player)) {
+			motion_add(point_direction(x, y, other.x, other.y), (point_distance(x, y, other.x, other.y)/80) * 3);
+			
+			if(chance_ct(1, 2)) repeat(irandom(3)) with(instance_create(x, y, Dust)) {
+				motion_add(360, 1 + random(2));
+			}
+		}
+		
+		speed = 0;
+	}
+	
+	move_bounce_solid(false);
+	
+	 // Animate:
+	if(sprite_index = spr_fire) {
+		if(anim_end) {
+			if(spr_fire = spr.CubeGuardianFireStart) {
+				spr_idle = spr.CubeGuardianFire;
+				spr_hurt = spr.CubeGuardianFireHurt;
+				spr_fire = spr.CubeGuardianFireEnd;
+			}
+			
+			else {
+				spr_idle = spr.CubeGuardianWalk;
+				spr_hurt = spr.CubeGuardianHurt;
+				spr_fire = spr.CubeGuardianFireStart;
+			}
+			
+			sprite_index = spr_idle;
+		}
+	}
+	else sprite_index = enemy_sprite;
+	
+	enemy_face(direction);
+
+#define CubeGuardian_hurt(_damage, _force, _direction)
+	my_health -= _damage;           // Damage
+	motion_add(_direction, _force); // Knockback
+	sound_play_hit(snd_hurt, 0.2);  // Sound
+	nexthurt = current_frame + 6;   // I-Frames
+	
+	if(sprite_index != spr_fire) {
+		 // Hurt Sprite:
+		sprite_index = spr_hurt;
+		image_index  = 0;
+	}
+
+#define CubeGuardian_alrm1
+	alarm1 = 50 + irandom(20);
+	
+	if(sprite_index != spr_fire) {
+		if(enemy_target(x, y) and target_visible and target_distance < 96) {
+			if(chance(1, 3)) {
+				alarm1 = 120 + irandom(40);
+				alarm2 = alarm1 - 40;
+				
+				spr_fire = spr.CubeGuardianFireStart;
+				sprite_index = spr_fire;
+				direction = target_direction;
+				
+				sucking = true;
+				
+				sound_play_pitch(sndUltraGrenadeSuck, 1.4 + random(0.2));
+				sound_play_pitch(sndCrownGuardianAppear, 1.5 + random(0.2));
+				sound_play_pitch(sndEliteGruntRocketFly, 1.4 + random(0.4));
+			}
+			
+			else {
+				enemy_walk(target_direction, alarm1 - 15);
+			}
+		}
+		
+		else {
+			enemy_walk(random(360), alarm1 - 5);
+		}
+	}
+
+#define CubeGuardian_alrm2
+	sprite_index = spr_fire;
+	sucking  	 = false;
+	sound_play_pitch(sndGuardianDisappear, 1.2 + random(0.2));
+	sound_play_pitch(sndGuardianFire, 1.4 + random(0.2));
+
+#define CubeGuardian_death
+	repeat(3) pickup_drop(80, 0);
+
 #define EliteSniper_create(_x, _y)
 	with(instance_create(_x, _y, CustomEnemy)) {
 		 // Visual:
@@ -409,7 +644,7 @@
 		
 		 // Vars:
 		mask_index  = mskBanditBoss;
-		maxhealth   = 24;
+		maxhealth   = 32;
 		raddrop     = 14;
 		size        = 2;
 		walk	    = 0;
@@ -420,7 +655,7 @@
 		detonate    = 0;
 		
 		 // Alarms:
-		alarm1 = 60 + irandom(10);
+		alarm1 = 40 + irandom(10);
 		
 		return self;
 	}
@@ -440,7 +675,7 @@
 	image_index  = 0;
 
 #define EliteSniper_alrm1
-	alarm1 = 60 + irandom(10);
+	alarm1 = 40 + irandom(10);
 	
 	if(enemy_target(x, y) and target_visible) {
 		if(chance(2, 3)) {
@@ -537,7 +772,7 @@
 	
 		 // Vars:
 		mask_index = mskBanditBoss;
-		maxhealth  = 20;
+		maxhealth  = 48;
 		my_health  = maxhealth;
 		maxspeed   = 3;
 		friction   = 0.4;
@@ -577,7 +812,7 @@
 	instance_create(x, y, Explosion);
 	repeat(3) instance_create(x, y, SmallExplosion);
 	corpse_drop(self, direction, max(7, speed));
-	pickup_drop(60, 10, 2);
+	repeat(2) pickup_drop(60, 10, 2);
 
 #define Guppy_create(_x, _y)
 	with(instance_create(_x, _y, CustomEnemy)) {
@@ -806,9 +1041,353 @@
 	if(chance(1, 2)) obj_create(x, y, BoneFish);
 	
 	fx(x, y, 0, ExploderExplo);
-	pickup_drop(70, 20, 2);
+	repeat(2) pickup_drop(70, 20, 2);
 	
 	sound_play_pitch(sndOasisExplosionSmall, 0.6 + random(0.2));
+
+#define SmallDog_create(_x, _y)
+	with(instance_create(_x, _y, CustomEnemy)) {
+		 // Visual:
+		spr_idle   = spr.SmallDogIdle;
+		spr_walk   = spr.SmallDogWalk;
+		spr_hurt   = spr.SmallDogHurt;
+		spr_dead   = spr.SmallDogDead;
+		spr_shadow = shd24;
+		//spr_shadow_y += 12;
+		hitid      = [spr_idle, "SMALL DOG"];
+		depth      = -2;
+
+		 // Sound:
+		snd_hurt = sndWolfHurt;
+		snd_dead = sndWolfDead;
+		
+		 // Vars:
+		mask_index  = mskSnowBot;
+		maxhealth   = 40;
+		raddrop     = 14;
+		size        = 1;
+		walk	    = 0;
+		walkspeed   = 1;
+		maxspeed    = 3;
+		direction   = random(360);
+		meleedamage = 3;
+		
+		 // Alarms:
+		alarm1 = 40 + irandom(40);
+		
+		return self;
+	}
+
+#define SmallDog_alrm1
+	alarm1 = 60 + irandom(10);
+	
+	if(enemy_target(x, y) and target_visible) {
+		alarm1 = 40 + irandom(20);
+		direction = target_direction + orandom(20);
+		enemy_walk(direction, alarm1 - 10);
+		if(chance(1, 6)) {
+			with(instance_create(x, y, ScrapBossMissile)) {
+				motion_add(other.direction, other.speed);
+			}
+			sound_play_pitch(sndBigDogMissile, 1.2 + random(0.2));
+		}
+	}
+	
+	else if(chance(1, 3)) {
+		direction = random(360);
+		enemy_walk(direction, alarm1 - 20);
+	}
+	
+	enemy_face(direction);
+	
+#define SmallDog_death
+	pickup_drop(60, 10, 2);
+	with(instance_create(x, y, ScrapBossMissile)) {
+		motion_add(other.direction, other.speed);
+	}
+	sound_play_pitch(sndBigDogMissile, 1.2 + random(0.2));
+
+#define SodaBullet_create(_x, _y)
+	with(instance_create(_x, _y, CustomProjectile)){
+		 // Visual:
+		spr_idle     = sprSodaCan;
+		sprite_index = spr_idle;
+		image_speed  = 0;
+		image_index  = irandom(2);
+		image_angle  = random(360);
+		
+		 // Vars:
+		mask_index = mskEnemyBullet1;
+		friction   = 0.2;
+		damage     = 2;
+		force      = 4;
+		typ        = 2;
+		
+		return self;
+	}
+	
+#define SodaBullet_step
+	image_angle += speed;
+
+	 // Disappear:
+	if(speed = 0) {
+		instance_destroy();
+	}
+	
+#define SodaBullet_anim
+	if(instance_exists(self)){
+		if(sprite_index == spr_spwn){
+			image_speed = 0.4;
+			sprite_index = spr_idle;
+		}
+		
+		 // Goodbye:
+		else if(sprite_index == spr_fade){
+			instance_destroy();
+		}
+	}
+	
+#define SodaBullet_hit
+	if(projectile_canhit_melee(other)){
+		projectile_hit_np(other, damage, force, 10);
+		
+		instance_destroy();
+	}
+	
+#define SodaBullet_wall
+	instance_create(x, y, Dust);
+	sound_play_hit(sndHitWall, 0.2);
+	instance_destroy();
+	
+#define SodaBullet_destroy
+	with(instance_create(x, y, Shell)) {
+		motion_add(other.direction, other.speed);
+		sprite_index = other.spr_idle;
+		image_speed  = 0;
+		image_index  = other.image_index;
+		image_angle  = other.image_angle;
+	}
+
+#define SodaMimic_create(_x, _y)
+	with(instance_create(_x, _y, CustomEnemy)) {
+		 // Visual:
+		spr_idle   = spr.SodaMimicIdle;
+		spr_walk   = spr.SodaMimicWalk;
+		spr_hurt   = spr.SodaMimicHurt;
+		spr_dead   = spr.SodaMimicDead;
+		spr_tell   = spr.SodaMimicTell;
+		spr_shadow = shd32;
+		spr_shadow_y = 5;
+		hitid      = [spr_tell, "SODA MIMIC"];
+		depth      = -2;
+
+		 // Sound:
+		snd_hurt = sndMimicHurt;
+		snd_dead = sndMimicDead;
+		
+		 // Vars:
+		mask_index  = spr_idle;
+		maxhealth   = 20;
+		raddrop     = 10;
+		size        = 0;
+		walk	    = 0;
+		walkspeed   = 0.8;
+		maxspeed    = 2;
+		friction    = 0.4;
+		direction   = random(360);
+		meleedamage = 5;
+		
+		 // Alarms:
+		alarm1 = 30 + irandom(15);
+		
+		return self;
+	}
+
+#define SodaMimic_step
+	 // Alarms:
+	if("on_alrm0" in self and alarm0_run) exit;
+	if("on_alrm1" in self and alarm1_run) exit;
+	
+	 // Movement:
+	if(walk > 0){
+		walk -= current_time_scale;
+		speed += walkspeed * current_time_scale;
+	}
+	if(speed > maxspeed){
+		speed = maxspeed;
+	}
+	
+	 // Animate:
+	if(sprite_index = spr_tell) {
+		if(anim_end) sprite_index = spr_idle;
+	}
+	else sprite_index = enemy_sprite;
+
+#define SodaMimic_alrm1
+	alarm1 = 30 + irandom(10);
+	
+	if(enemy_target(x, y) and target_visible and target_distance < 64) {
+		enemy_walk(target_direction, alarm1);
+		enemy_face(target_direction);
+		
+		sound_play_pitch(sndMimicMelee, 1.2 + random(0.3));
+		sound_play_pitch(choose(sndCanBounce1, sndCanBounce2), 1 + random(0.4));
+		
+		if(chance(2, 3)) {
+			sound_play_pitch(sndShotgun, 1.6 + random(0.2));
+			sound_play_pitch(sndSodaMachineBreak, 1 + random(0.2));
+			
+			repeat(4) projectile_create(self, x, y, "SodaBullet", target_direction + orandom(20), 5 + random(4));
+		}
+	}
+	
+	else {
+		if(sprite_index = spr_idle and chance(1, 8)) {
+			sprite_index = spr_tell;
+			image_index = 0;
+			sound_play_pitch(sndMimicSlurp, 1.1 + random(0.2));
+			
+			if(fork()) {
+				repeat(7 + irandom(3)) {
+					sound_play_pitch(choose(sndCanBounce1, sndCanBounce2), 1 + random(0.4));
+					wait 1 + irandom(2);
+				}
+				exit;
+			}
+		}
+	}
+
+#define SodaMimic_death
+	pickup_drop(100, 60, 2);
+	
+#define ShieldSpider_create(_x, _y)
+	with(instance_create(_x, _y, CustomEnemy)) {
+		 // Visual:
+		spr_idle   = spr.ShieldSpiderIdle;
+		spr_walk   = spr.ShieldSpiderWalk;
+		spr_hurt   = spr.ShieldSpiderHurt;
+		spr_dead   = spr.ShieldSpiderDead;
+		spr_shld   = spr.ShieldSpiderShield;
+		spr_shadow = shd32;
+		spr_shadow_y = 5;
+		hitid      = [spr_idle, "SHIELD SPIDER"];
+		depth      = -2;
+
+		 // Sound:
+		snd_hurt = sndMimicHurt;
+		snd_dead = sndMimicDead;
+		
+		 // Vars:
+		mask_index  = mskSpider;
+		maxhealth   = 44;
+		raddrop     = 22;
+		size        = 1;
+		walk	    = 0;
+		walkspeed   = 0.8;
+		maxspeed    = 2.8;
+		direction   = random(360);
+		meleedamage = 3;
+		shielding   = false;
+		
+		 // Alarms:
+		alarm1 = 40 + irandom(15);
+		
+		return self;
+	}
+
+#define ShieldSpider_step
+	 // Alarms:
+	if("on_alrm0" in self and alarm0_run) exit;
+	if("on_alrm1" in self and alarm1_run) exit;
+	if("on_alrm2" in self and alarm2_run) exit;
+	
+	 // Movement:
+	if(walk > 0){
+		walk -= current_time_scale;
+		speed += walkspeed * current_time_scale;
+	}
+	if(speed > maxspeed){
+		speed = maxspeed;
+	}
+	
+	 // Animate:
+	if(sprite_index = spr_shld) {
+		if(anim_end) {
+			if(spr_shld = spr.ShieldSpiderShield) {
+				spr_idle = spr.ShieldSpiderShielded;
+				spr_hurt = spr.ShieldSpiderShieldedHurt;
+				spr_shld = spr.ShieldSpiderOff;
+			}
+			
+			else {
+				spr_idle = spr.ShieldSpiderIdle;
+				spr_hurt = spr.ShieldSpiderHurt;
+				spr_shld = spr.ShieldSpiderShield;
+			}
+			
+			sprite_index = spr_idle;
+		}
+	}
+	else sprite_index = enemy_sprite;
+
+#define ShieldSpider_hurt(_damage, _force, _direction)
+	if(shielding) {
+		projectile_create(self, x, y, EnemyBullet1, _direction + 180 + orandom(25), min(_force, 4));
+		sound_play_hit(sndShielderDeflect, 0.5);
+		sound_play_hit(sndCrystalPropBreak, 0.5);
+	}
+	
+	else {
+		my_health -= _damage;           // Damage
+		motion_add(_direction, _force); // Knockback
+		sound_play_hit(snd_hurt, 0.2);  // Sound
+	}
+	
+	nexthurt = current_frame + 6;   // I-Frames
+	
+	if(sprite_index != spr_shld) {
+		 // Hurt Sprite:
+		sprite_index = spr_hurt;
+		image_index  = 0;
+	}
+
+#define ShieldSpider_alrm1
+	alarm1 = 30 + irandom(10);
+	
+	if(sprite_index != spr_shld) {
+		if(enemy_target(x, y) and target_visible and target_distance < 128) {
+			if(chance(1, 3)) {
+				alarm1 = 100 + irandom(20);
+				alarm2 = alarm1 - 10;
+				
+				spr_shld = spr.ShieldSpiderShield;
+				sprite_index = spr_shld;
+				
+				shielding = true;
+				
+				sound_play_pitch(sndCrystalRicochet, 0.8 + random(0.2));
+				sound_play_pitch(sndCrystalPropBreak, 1.2 + random(0.2));
+				
+			}
+			
+			else {
+				enemy_walk(target_direction, alarm1 - 15);
+			}
+		}
+		
+		else {
+			enemy_walk(random(360), alarm1 - 5);
+		}
+	}
+	
+	enemy_face(direction);
+
+#define ShieldSpider_alrm2
+	sprite_index = spr_shld;
+	shielding	 = false;
+
+#define ShieldSpider_death
+	repeat(2) pickup_drop(70, 10, 2);
 
 #macro  spr                                                                                     global.spr
 #macro  snd                                                                                     global.snd
