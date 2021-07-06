@@ -3,7 +3,7 @@
 	global.sprWalk = sprite_add("../sprites/Characters/Brute/sprBruteWalk.png", 10, 12 , 12);
 	global.sprHurt = sprite_add("../sprites/Characters/Brute/sprBruteHurt.png", 3, 12, 12);
 	global.sprDead = sprite_add("../sprites/Characters/Brute/sprBruteDead.png", 6, 12 , 12);
-	global.sprPort = sprite_add("../sprites/Characters/Brute/sprBrutePortrait.png", 1, 40, 230);
+	global.sprPort = sprite_add("../sprites/Characters/Brute/sprBrutePortrait.png", 1, 40, 231);
 	global.sprHand = sprite_add("../sprites/Characters/Brute/sprHand.png", 1, 12, 12);
 	
 	 // Reapply sprites if the mod is reloaded. we should add this to our older race mods //
