@@ -1,10 +1,12 @@
 #define init
-	global.sprIdle = sprite_add("../sprites/Characters/Brute/sprBruteIdle.png", 18, 12, 12);
-	global.sprWalk = sprite_add("../sprites/Characters/Brute/sprBruteWalk.png", 10, 12 , 12);
-	global.sprHurt = sprite_add("../sprites/Characters/Brute/sprBruteHurt.png", 3, 12, 12);
-	global.sprDead = sprite_add("../sprites/Characters/Brute/sprBruteDead.png", 6, 12 , 12);
-	global.sprPort = sprite_add("../sprites/Characters/Brute/sprBrutePortrait.png", 1, 40, 231);
-	global.sprHand = sprite_add("../sprites/Characters/Brute/sprHand.png", 1, 12, 12);
+	global.sprIdle   = sprite_add("../sprites/Characters/Brute/sprBruteIdle.png", 18, 12, 12);
+	global.sprWalk   = sprite_add("../sprites/Characters/Brute/sprBruteWalk.png", 10, 12 , 12);
+	global.sprHurt   = sprite_add("../sprites/Characters/Brute/sprBruteHurt.png", 3, 12, 12);
+	global.sprDead   = sprite_add("../sprites/Characters/Brute/sprBruteDead.png", 6, 12 , 12);
+	global.sprPort   = sprite_add("../sprites/Characters/Brute/sprBrutePortrait.png", 1, 40, 231);
+	global.sprSelect = sprite_add("../sprites/Characters/Brute/sprBruteSelect.png", 1, 0, 0);
+	global.sprMap    = sprite_add("../sprites/Characters/Brute/sprBruteMap.png", 1, 10, 10);
+	global.sprHand   = sprite_add("../sprites/Characters/Brute/sprHand.png", 4, 8, 8);
 	
 	 // Reapply sprites if the mod is reloaded. we should add this to our older race mods //
 	with(instances_matching(Player, "race", mod_current)) { 
@@ -24,6 +26,9 @@
 #define race_portrait
 	return global.sprPort;
 
+#define race_menu_button
+	sprite_index = global.sprSelect;
+
 #define race_soundbank
 	return 7;
 
@@ -38,6 +43,16 @@
 		case 1: return "@dNYI@s";
 		case 2: return "@dNYI@s";
 	}
+	
+#define race_mapicon
+	return global.sprMap;
+
+#define race_ttip
+	 // ULTRA TIPS //
+	if(instance_exists(GameCont) and GameCont.level >= 10 and random(5) < 1) return choose("THE CYCLE OF VIOLENCE", "WARMONGER", "IT BEGINS AGAIN", "A BREAK WOULD BE NICE", "YOU'LL NEVER BE SATISFIED");
+	
+	 // NORMAL TIPS //
+	else return choose("BREAK IT DOWN", "READYING A @rPUNCH@s#SLOWS YOU DOWN", "@rPUNCH@s KILLS HEAL YOU", "END IT", "CARNAGE", "BLITZKRIEG", "WASTELAND HIERARCHY", "SHOW YOUR STRENGTH", "NO INSECURITY", "YOU'LL NEVER BE SAFE");
 
 #define create
 	assign_sprites();
@@ -62,7 +77,7 @@
 			
 			if(fork()) { // weird visual workaround
 				wait 2;
-				brutedie = 0;
+				if(instance_exists(self)) brutedie = 0;
 				exit;
 			}
 			
@@ -90,7 +105,19 @@
 		}
 		
 		if(fist_chrg < chrg_max) {
+			var diff = fist_chrg
 			fist_chrg += chrg_mult;
+			
+			if(diff < 2 and fist_chrg > 2) {
+				sound_play_pitch(sndEmpty, 1.4 + random(0.4));
+				sound_play_pitch(sndSwapBow, 1.4 + random(0.4));
+				
+				with(instance_create(x, y, ImpactWrists)) {
+					depth = depth - 1;
+					image_xscale = 0.5;
+					image_yscale = 0.5;
+				}
+			}
 			
 			sound_play_pitchvol(sndJackHammer, 0.2 + (fist_chrg/chrg_max) + random(0.1), 0.4);
 			if(fist_chrg > 2) {
@@ -102,7 +129,7 @@
 				sound_play_pitch(sndSwapMotorized, 0.6 + random(0.2));
 				sound_play_pitch(sndSwapBow, 0.4 + random(0.2));
 				
-				with(instance_create(x, y, ImpactWrists)) {
+				with(instance_create(x, y, ChickenB)) {
 					depth = depth - 1;
 					image_speed = 0.5;
 				}
@@ -131,7 +158,10 @@
 								_hit[1] = 1;
 								
 								if(my_health <= 0) {
-									_hit[2] += 1;
+									if("brutehit" not in self) {
+										_hit[2] += 1;
+										brutehit = true;
+									}
 								}
 								
 								with(instance_create(x - hspeed, y - vspeed, BloodGamble)) {
@@ -164,7 +194,11 @@
 				if(_hit[2]) {
 					repeat(3) instance_create(x, y, AllyDamage);
 					
-					my_health += min(maxhealth - my_health, _hit[1]);
+					with(instance_create(x, y, PopupText)) {
+						mytext = other.maxhealth - other.my_health < _hit[2] ? "MAX HP" : `+${_hit[2]} HP`
+					}
+					
+					my_health += min(maxhealth - my_health, _hit[2]);
 					
 					sound_play_pitch(sndHitFlesh, 0.6 + random(0.2));
 					sound_play_pitch(sndBigMaggotHit, 0.8 + random(0.2));
@@ -221,7 +255,7 @@
 	}
 
 #define draw
-	draw_sprite_ext(global.sprHand, 0, x - lengthdir_x(fist_chrg * 2, gunangle) + (orandom(fist_chrg) * 0.40), y - lengthdir_y(fist_chrg * 2, gunangle) + (orandom(fist_chrg) * 0.40), 1, right, gunangle, image_blend, abs(fist_chrg)/chrg_max);
+	draw_sprite_ext(global.sprHand, (min(abs(fist_chrg), 1)/1) * 3, x - lengthdir_x(fist_chrg * 2, gunangle) + (orandom(fist_chrg) * 0.40), y - lengthdir_y(fist_chrg * 2, gunangle) + (orandom(fist_chrg) * 0.40), 1, right, gunangle + (fist_chrg * 3), image_blend, abs(fist_chrg)/0.75);
 
 #define assign_sprites
 	if(object_index = Player) {
