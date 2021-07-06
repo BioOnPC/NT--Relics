@@ -52,6 +52,22 @@
 		
 		//#endregion
 	}
+	
+	 // List of area variants:
+	global.area_variants = [];
+	
+	var _mod = mod_get_names("mod"),
+		_scr = "init_variants";
+	
+	 // Go through all of the mods loaded and execute their init_variants script:
+	for(i = 0; i < array_length(_mod); i++) {
+		if(mod_script_exists("mod", _mod[i], _scr)) {
+			mod_script_call("mod", _mod[i], _scr);
+		}
+	}
+
+#define init_variants
+	area_variant_add(50, 1, "night desert", ["so cold", "cold-blooded", "ambush", "so quiet"], -1, -1, -1);
 
 #define obj_create(_x, _y, _name)
      // Vanilla Objects:
@@ -135,6 +151,7 @@
 	return o;
 
 #define step
+	
 	with(instances_matching(Sniper, "eliteified", null)) {
 		eliteified = true;
 		if(chance(1 + (instance_exists(GameCont) ? GameCont.loops * 3 : 0), 20)) {
@@ -155,6 +172,112 @@
 		jellified = true;
 		if(chance(1, 3)) obj_create(x, y, "Jelly");
 	}
+
+ // Thanks yokin! //
+#define draw_gui
+     // Player HUD Management:
+    if(instance_exists(Player) && !instance_exists(PopoScene) && !instance_exists(MenuGen)){
+        if(instance_exists(TopCont) || instance_exists(GenCont) || instance_exists(LevCont)){
+            var _hudFade  = 0,
+                _hudIndex = 0,
+                _lastSeed = random_get_seed();
+                
+             // Game Win Fade Out:
+            if(array_length(instances_matching(TopCont, "fadeout", true))){
+                with(TopCont){
+                    _hudFade = clamp(fade, 0, 1);
+                }
+            }
+            if(_hudFade > 0){
+                 // GMS1 Partial Fix:
+                try if(!null){}
+                catch(_error){
+                    _hudFade = min(_hudFade, round(_hudFade));
+                }
+                
+                 // Dim Drawing:
+                if(_hudFade > 0){
+                    draw_set_fog(true, c_black, 0, 16000 / _hudFade);
+                }
+            }
+            
+             // Draw Player HUD:
+            for(var _isOnline = 0; _isOnline <= 1; _isOnline++){
+                for(var _index = 0; _index < maxp; _index++){
+                    if(
+                        player_is_active(_index)
+                        && (_hudIndex < 2 || !instance_exists(LevCont))
+                        && (player_is_local_nonsync(_index) ^^ _isOnline)
+                    ){
+                        var _hudVisible = false;
+                        
+                         // HUD Visibility:
+                        for(var i = 0; true; i++){
+                            var _local = player_find_local_nonsync(i);
+                            if(!player_is_active(_local)){
+                                break;
+                            }
+                            if(player_get_show_hud(_index, _local)){
+                                _hudVisible = true;
+                                break;
+                            }
+                        }
+                        
+                         // Draw HUD:
+                        if(_hudVisible || _isOnline == 0){
+                            if(_hudVisible){
+                                var _player = player_find(_index);
+                                if(instance_exists(_player)){
+                                     // Rad Canister / Co-op Offsets:
+                                    var _playerNum = 0;
+                                    for(var i = 0; i < maxp; i++){
+                                        _playerNum += player_is_active(i);
+                                    }
+                                    if(_playerNum <= 1){
+                                        d3d_set_projection_ortho(
+                                            view_xview_nonsync - 17,
+                                            view_yview_nonsync,
+                                            game_width,
+                                            game_height,
+                                            0
+                                        );
+                                    }
+                                    else draw_set_projection(2, _index);
+                                    
+                                     // Draw:
+                                    player_hud(_player, _hudIndex, _hudIndex % 2);
+                                    
+                                    draw_reset_projection();
+                                }
+                            }
+                            _hudIndex++;
+                        }
+                    }
+                }
+            }
+            if(_hudFade > 0){
+                draw_set_fog(false, 0, 0, 0);
+            }
+            random_set_seed(_lastSeed);
+        }
+    }
+
+#define player_hud(_player, _hudIndex, _hudSide)
+    with(_player) {
+	    if(race = "brute") {
+	    	if(my_health > 1) {
+			    draw_set_color(player_get_color(_hudIndex));
+			    draw_rectangle(2, 3, 91, 18, 1);
+			    draw_set_color(c_white);
+	    	}
+	    	
+	    	else if(brutedie = -1) {
+	    		draw_set_color(c_red);
+			    draw_rectangle(2, 3, 91, 18, 1);
+			    draw_set_color(c_white);
+	    	}
+	    }
+    }
 
 #define draw_dark
 	draw_set_color($808080);
@@ -240,7 +363,7 @@
 			
 			sound_play_pitch(sndOasisHorn, 1.1 + random(0.4));
 			sound_play_pitch(sndOasisMelee, 0.7 + random(0.4));
-			sound_play_pitchvol(sndToxicBarrelGas, 0.5 + random(0.2), 0.4);
+			sound_play_pitchvol(sndFishTB, 1.2 + random(0.2), 0.7);
 			sound_play_pitch(sndFreakHurt, 0.5 + random(0.3));
 		}
 		
@@ -687,137 +810,10 @@
 	
 	sound_play_pitch(sndOasisExplosionSmall, 0.6 + random(0.2));
 
-#define goldsalamander_create(_x,_y)
-with instance_create(_x,_y,CustomEnemy){
-	name = "goldsalamander"
-	team = 1
-	spr_idle = sprSalamanderIdle
-	spr_walk = sprSalamanderWalk
-	spr_hurt = sprSalamanderHurt
-	spr_dead = sprSalamanderDead
-	sprite_index = spr_idle;
-	hitid = [spr_idle,"golden salamander"]
-	snd_hurt = sndSalamanderHurt
-	snd_dead = sndSalamanderDead
-	on_death = goldsalamander_death
-	maxhealth = 40 + (10*instance_number(Player))
-	direction = random(360)
-	spr_shadow = shd64
-	size = 2
-	mask_index = mskScrapBoss
-	friction = 0.8
-	canmelee = 1
-	meleedamage = 2
-	target = 0
-	targetvisible = 0
-	fire = 150
-	walk = 0
-	raddrop = 20
-	charging = 0
-	gunangle = random(360)
-	return id;
-	}
-#define goldsalamander_step
-if(nexthurt > current_frame){
-	if(sprite_index != spr_hurt) {
-		image_index = 0;
-		sprite_index = spr_hurt;}
-		}
-	else{
-		if(speed > friction)
-			sprite_index = spr_walk;
-		else 
-			sprite_index = spr_idle;
-			}
-if(instance_exists(Player))
-	target = instance_nearest(x,y,Player);
-else 
-	target = 0;
-	
-if(instance_exists(target) && collision_line(x,y,target.x,target.y,Wall,0,0) < 0){
-	targetvisible = 1;
-	gunangle = point_direction(x,y,target.x,target.y)
-	}
-else
-	targetvisible = 0;	
-	
-if(target > 0){
-	if(targetvisible){
-		var p = instance_nearest(x,y,Player)
-		fire -= 1
-		if(target.x > x)
-			image_xscale = 1
-		else
-			image_xscale = -1
-		}
-	}
-
-if fire > 0
-	fire -= 1
-if fire <= 0 and charging = 0 and targetvisible{
-	sound_play(sndSalamanderCharge)
-	charging = 1
-	fire = 300
-	}
-if charging >= 1{
-	sound_loop(sndSalamanderCharge)
-	walk = 0
-	speed = 0
-	spr_idle = sprSalamanderFire
-	sprite_index = spr_idle
-	charging += 2.5
-	if image_index > 6
-		image_index = 6
-	with instance_create(x+(30*right)+random_range(-60+(charging/5),60-(charging/5)),y+random_range(-60+(charging/5),60-(charging/5)),Dust){
-		motion_set(point_direction(x,y,other.x+(30*other.right),other.y)+15,3+(other.charging/50))
-		sprite_index = sprSmoke
-		image_xscale = other.charging/100
-		image_yscale = image_xscale
-		}
-	if charging >= 100{
-		sound_stop(sndSalamanderCharge)
-		var dir = -50
-			if fork(){
-				repeat 5 if instance_exists(self){
-					with instance_create(x,y,Flare){
-						sound_play(sndSalamanderFire)
-						move_contact_solid(other.gunangle, 6);
-						motion_add(other.gunangle + dir + (random_range(-8, 8)), random_range(6,9));
-						image_angle = direction;
-						hitid = [sprSalamanderFire,"golden salamander"];
-						team = other.team;
-						creator = other;
-						}
-					dir += 20
-					wait 1
-					}
-				}
-		charging = 0
-		spr_idle = sprSalamanderIdle
-		walk = 25
-		}
-	}
-if targetvisible == 1 and charging <= 0 and random(10)>9{
-	direction = gunangle
-	walk = 25
-	}
-if walk > 0 and charging <= 0{
-	walk -= 1
-	motion_add(direction, 0.8)
-	}
-if speed > 2.5
-	speed = 2
-
-if targetvisible == 0 and charging<=0 and (random(50)<1){
-	direction = random(360)
-	walk = 25+random(10)
-	}
-#define goldsalamander_death
-sound_stop(sndSalamanderCharge)
-
 #macro  spr                                                                                     global.spr
 #macro  snd                                                                                     global.snd
 #macro  msk                                                                                     spr.msk
+#macro	variant_areas																			global.area_variants
 #macro  type_melee                                                                              0
 #macro  type_bullet                                                                             1
 #macro  type_shell                                                                              2
@@ -896,6 +892,30 @@ sound_stop(sndSalamanderCharge)
 #define enemy_death
 	pickup_drop(20, 0);
 
+#define area_variant_add(_chance, _area, _name, _tips, _enter, _step, _leave)
+	/*
+		Adds an area variant to the pool of possible variants
+		
+		Args:
+			chance - Chance of occuring, integer
+			area   - Area the variant occurs in, integer or string for modded areas
+			name   - Name of the variant, string
+			tips   - The selection of tips for the given variant, array of strings
+			enter  - Script run when the level is finished generating, use this to set sprites, add/replace/remove enemies and props, or add new levelgen, script reference. Return -1 if there is no enter script
+			step   - Script run while the variant is active, script reference. Return -1 if there is no step script
+			leave  - Script run when the variant is left, use this to reset any drastic changes that won't return to normal from proceeding to the next area, script reference. Return -1 if there is no leave script
+	*/
+	
+	array_push(variant_areas, {
+		variant_chnc : _chance,
+		variant_area : _area,
+		variant_name : _name,
+		variant_tips : _tips,
+		variant_entr : _enter,
+		variant_step : _step,
+		variant_leav : _leave
+	});
+	
 #define corpse_drop // inst, direction=inst.direction, speed=inst.speed
 	/*
 		Creates a corpse based on the given hitme's variables
@@ -1071,7 +1091,29 @@ sound_stop(sndSalamanderCharge)
 			}
 		}
 	}
+
+#define instances_in_rectangle(_x1, _y1, _x2, _y2, _obj)
+	/*
+		Returns all instances of the given object whose positions overlap the given rectangle
+		Much better performance than checking 'point_in_rectangle()' on every instance
+		
+		Args:
+			x1/y1/x2/y2 - The rectangular area to search
+			obj         - The object(s) to search
+	*/
 	
+	return (
+		instances_matching_le(
+		instances_matching_le(
+		instances_matching_ge(
+		instances_matching_ge(
+		_obj,
+		"x", _x1),
+		"y", _y1),
+		"x", _x2),
+		"y", _y2)
+	);
+
 #define instances_meeting(_x, _y, _obj)
 	/*
 		Returns all instances whose bounding boxes overlap the calling instance's bounding box at the given position

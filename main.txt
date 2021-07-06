@@ -1,1 +1,4 @@
 /loadmod relics
+
+// -- CHARACTERS -- //
+/loadrace characters/brute
