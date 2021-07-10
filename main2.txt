@@ -1,0 +1,10 @@
+/allowmod AutoUpdate.mod
+/allowmod libLoader
+
+/loadmod relics
+
+// -- CHARACTERS -- //
+/loadrace characters/brute
+
+// -- AREAS -- //
+/loadarea areas/castle

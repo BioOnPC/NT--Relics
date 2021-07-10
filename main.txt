@@ -1,4 +1,3 @@
-/loadmod relics
-
-// -- CHARACTERS -- //
-/loadrace characters/brute
+/loadmod libLoader
+/loadmod AutoUpdate
+/load main2

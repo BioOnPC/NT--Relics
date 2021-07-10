@@ -18,7 +18,7 @@
 	return "BRUTE";
 
 #define race_text
-	return "CAN ONLY DIE AT @r1 HP@w#IS SLOWER#CAN @rPUNCH@w";
+	return "IS SLOWER#CAN ONLY DIE AT @r1 HP@w#CAN @rPUNCH@w";
 
 #define race_tb_text
 	return "@gNUCLEAR@s PUNCH";
@@ -180,7 +180,7 @@
 					move_contact_solid(gunangle, 8);
 					xprevious = x;
 					yprevious = y;
-					with(instances_meeting(x, y, [projectile, hitme])) {
+					with(call(scr.instances_meeting, x, y, [projectile, hitme])) {
 						if(team != other.team) {
 							if(instance_is(self, projectile)) {
 								_hit[0] = 1;
@@ -219,7 +219,7 @@
 						if(random(4) < 1) instance_create(x, y, skill_get(mut_throne_butt) ? AcidStreak : BloodStreak).image_angle = gunangle + orandom(10);
 					}
 					
-					with(instances_in_rectangle(x-25,y-25,x+25,y+25,Rad)){
+					with(call(scr.instances_in_rectangle, x - 25,y - 25,x + 25,y + 25, Rad)){
 						move_contact_solid(other.gunangle, 2);
 						motion_add(other.gunangle,4/power(sqr(x-other.x) + sqr(y-other.y), 0.25));
 						speed = min(speed, 12);
@@ -247,11 +247,11 @@
 					sound_play_pitch(sndSharpTeeth, 0.5 + random(0.2));
 				}
 				
-				with(instances_in_rectangle(x - 48, y - 48, x + 48, y + 48, projectile)) {
+				with(call(scr.instances_in_rectangle, x - 48, y - 48, x + 48, y + 48, projectile)) {
 					if(team != other.team) instance_destroy();
 				}
 				
-				with(projectile_create(self, x + hspeed, y + vspeed, _hit[2] ? BloodSlash : Slash, gunangle, speed * 0.5)) {
+				with(call(scr.projectile_create, self, x + hspeed, y + vspeed, _hit[2] ? BloodSlash : Slash, gunangle, speed * 0.5)) {
 					damage = 4;
 					if(instance_is(self, BloodSlash)) damaged = 1;
 				}
@@ -349,15 +349,8 @@
 	snd_idpd = snd.EffigyIDPD;
 	snd_cptn = snd.EffigyCaptain;*/
 
+#macro  scr																						mod_variable_get("mod", "relics", "scr")
+#macro  call																					script_ref_call
 #define orandom(_num)
 	return mod_script_call("mod", "relics", "orandom", _num);
-
-#define instances_meeting(_x, _y, _obj)
-	return mod_script_call("mod", "relics", "instances_meeting", _x, _y, _obj);
-	
-#define instances_in_rectangle(_x1, _y1, _x2, _y2, _obj)
-	return mod_script_call("mod", "relics", "instances_in_rectangle", _x1, _y1, _x2, _y2, _obj);
-	
-#define projectile_create(_inst, _x, _y, _obj, _dir, _spd)
-	return mod_script_call("mod", "relics", "projectile_create", _inst, _x, _y, _obj, _dir, _spd);
 
