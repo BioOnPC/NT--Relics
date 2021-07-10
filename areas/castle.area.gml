@@ -3,9 +3,8 @@
 	
 #define area_subarea           return 3;
 #define area_goal              return 110;
-#define area_next              
-	GameCont.loops++;
-	return [area_campfire, 1];
+#define area_next     
+	return [area_palace, 3];
 #define area_background_color  return make_color_rgb(69, 80, 95);
 #define area_shadow_color      return c_black;
 #define area_darkness          return false;
@@ -156,7 +155,7 @@
 	
 	if(random(4) < 1) _e = choose("PlasmaEye", "HellKnight");
 	if(styleb and random(4) < 1) _e = "HellKnight";
-	if(random(4) < 1) call(scr.obj_create, _x, _y, _e);
+	if(random(8) < 1) call(scr.obj_create, _x, _y, _e);
 	
 #define area_pop_props
 	var	_x = x + 16,

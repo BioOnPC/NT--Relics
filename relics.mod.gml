@@ -1295,6 +1295,26 @@
 		return self;
 	}
 
+#define Imp_step
+	 // Alarms:
+	if("on_alrm0" in self and alarm0_run) exit;
+	if("on_alrm1" in self and alarm1_run) exit;
+	
+	 // Movement:
+	if(walk > 0){
+		walk -= current_time_scale;
+		speed += walkspeed * current_time_scale;
+	}
+	if(speed > maxspeed){
+		speed = maxspeed;
+	}
+	
+	 // Animate:
+	if(sprite_index = spr_dash) {
+		if(anim_end) sprite_index = spr_idle;
+	}
+	else sprite_index = enemy_sprite;
+
 #define Imp_alrm1
 	alarm1 = 40 + irandom(30);
 
