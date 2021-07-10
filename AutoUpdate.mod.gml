@@ -3,7 +3,7 @@
 //this is just in case someone else uses the same name for a similar auto updater
 #macro NAME "Relics"
 //use this to set the version
-#macro VERSION 0.11
+#macro VERSION 0.12
 //set to true to generate the json
 #macro GENERATEJSON false
 
