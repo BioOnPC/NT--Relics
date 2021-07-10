@@ -36,7 +36,7 @@ while (!file_exists(NAME+"version.json")) {wait 1;}
 var newjson = json_decode(string_load(NAME+"version.json"));
 
 //When this if statement runs it replaces the files, so if you want to implement a backup here is where you do it
-if(!is_undefined(oldjson) || real(oldjson.version) < real(newjson.version) && VERSION < real(newjson.version)){
+if(!is_undefined(oldjson) && real(oldjson.version) < real(newjson.version)){
 	trace("There is an update for "+NAME+"! updating...");
 	for(var i = 0; i < array_length(newjson.files); i++){
 		//This appears to be safe, not deleting anything from the mods directory.
