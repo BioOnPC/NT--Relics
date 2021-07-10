@@ -51,8 +51,10 @@ if(!is_undefined(oldjson) && real(oldjson.version) < real(newjson.version)){
 	}
 }
 
-//replace "main.txt" with whatever you want to load with.
-mod_loadtext("../../mods/" + NAME + "/" + "main.txt");
+if(!is_undefined(oldjson) && real(oldjson.version) < real(newjson.version) || VERSION < real(newjson.version)){
+	//replace "main.txt" with whatever you want to load with.
+	mod_loadtext("../../mods/" + NAME + "/" + "main.txt");
+}
 
 //This generates the json file for the current setup, just set the macro
 #define generate_json
