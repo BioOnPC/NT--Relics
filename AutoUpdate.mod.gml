@@ -17,6 +17,7 @@ while(!mod_sideload()){wait 1;}
 //The version file is a json-encoded file that has "version" as the version number 
 //and an array "files" as the files to grab from the github.
 //This file is how the mod knows whether to download a new version.
+file_load(NAME+"version.json");
 while (!file_loaded(NAME+"version.json")) {wait 1;}
 var oldjson;
 if(file_exists(NAME+"version.json")){
@@ -27,23 +28,31 @@ if(file_exists(NAME+"version.json")){
 //I delete for safety, there's a chance it isn't necessary
 file_delete(NAME+"version.json");
 while (file_exists(NAME+"version.json")) {wait 1;}
-file_download(URL + NAME+"version.json", NAME+"version.json");
+file_download(URL + "version.json", NAME+"version.json");
 wait file_unload(NAME+"version.json");
+file_load(NAME+"version.json");
 while (!file_loaded(NAME+"version.json")) {wait 1;}
+while (!file_exists(NAME+"version.json")) {wait 1;}
 var newjson = json_decode(string_load(NAME+"version.json"));
 
 //When this if statement runs it replaces the files, so if you want to implement a backup here is where you do it
 if(!is_undefined(oldjson) || real(oldjson.version) < real(newjson.version) && VERSION < real(newjson.version)){
+	trace("There is an update for "+NAME+"! updating...");
 	for(var i = 0; i < array_length(newjson.files); i++){
 		//This appears to be safe, not deleting anything from the mods directory.
 		file_delete(newjson.files[i]);
 		while (file_exists(newjson.files[i])) {wait 1;}
-		file_download(URL + newjson.files[i], newjson.files[i]);
+		file_download(URL + newjson.files[i], "../../mods/" + NAME + "/" + newjson.files[i]);
+	}
+	for(var i = 0; i < array_length(newjson.files); i++){
+		file_load("../../mods/" + NAME + "/" + newjson.files[i]);
+		while (!file_exists("../../mods/" + NAME + "/" + newjson.files[i])) {wait 1;}
+		file_unload("../../mods/" + NAME + "/" + newjson.files[i]);
 	}
 }
 
 //replace "main.txt" with whatever you want to load with.
-mod_loadtext("data/"+mod_current+".mod/" + "main.txt");
+mod_loadtext("../../mods/" + NAME + "/" + "main.txt");
 
 //This generates the json file for the current setup, just set the macro
 #define generate_json
