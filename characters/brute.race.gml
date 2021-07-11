@@ -74,15 +74,17 @@
 #define create
 	assign_sprites();
 	
-	maxspeed -= 0.5;
-	
-	fist_chrg = 0;
-	chrg_max  = (skill_get(mut_throne_butt) ? 8 : 4);
-	chrg_mult = (skill_get(mut_throne_butt) ? 0.1 : 0.06);
-	
-	brutedie = 1;
-	
-	footkind = 3; // cool footstep sounds
+	if(instance_is(self, Player)) {
+		maxspeed -= 0.5;
+		
+		fist_chrg = 0;
+		chrg_max  = (skill_get(mut_throne_butt) ? 8 : 4);
+		chrg_mult = (skill_get(mut_throne_butt) ? 0.1 : 0.06);
+		
+		brutedie = 1;
+		
+		footkind = 3; // cool footstep sounds
+	}
 
 #define step
 	if(fork()) {
