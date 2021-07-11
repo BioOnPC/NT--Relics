@@ -238,6 +238,11 @@
 		instance_replace(self, "SmallDog");
 	}
 	
+	// Thief Spawns:
+	if(area_current[0] = 3) with(Bandit) if(chance(1, 3)) {
+		instance_replace(self, "Thief");
+	}
+	
 	 // Cube Guardian Spawns:
 	with(ExploGuardian) if(chance(1, 3)) {
 		instance_replace(self, "CubeGuardian");
