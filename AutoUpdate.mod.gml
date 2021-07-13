@@ -3,7 +3,7 @@
 //this is just in case someone else uses the same name for a similar auto updater
 #macro NAME "Relics"
 //use this to set the version
-#macro VERSION 0.12
+#macro VERSION 0.14
 //set to true to generate the json
 #macro GENERATEJSON false
 
@@ -34,9 +34,10 @@ file_load(NAME+"version.json");
 while (!file_loaded(NAME+"version.json")) {wait 1;}
 while (!file_exists(NAME+"version.json")) {wait 1;}
 var newjson = json_decode(string_load(NAME+"version.json"));
+wait file_unload(NAME+"version.json");
 
 //When this if statement runs it replaces the files, so if you want to implement a backup here is where you do it
-if(!is_undefined(oldjson) && real(oldjson.version) < real(newjson.version)){
+if(!is_undefined(oldjson) && newjson != json_error && real(oldjson.version) < real(newjson.version)){
 	trace("There is an update for "+NAME+"! updating...");
 	for(var i = 0; i < array_length(newjson.files); i++){
 		//This appears to be safe, not deleting anything from the mods directory.
@@ -51,7 +52,11 @@ if(!is_undefined(oldjson) && real(oldjson.version) < real(newjson.version)){
 	}
 }
 
-if(!is_undefined(oldjson) && real(oldjson.version) < real(newjson.version) || VERSION < real(newjson.version)){
+//I need to check whether this is a version the user downloaded or the mod
+file_load("../../data/"+mod_current+".mod/"+NAME+"version.json");
+while (!file_loaded(NAME+"version.json")) {wait 1;}
+
+if(!file_exists(NAME+"version.json")){
 	//replace "main.txt" with whatever you want to load with.
 	mod_loadtext("../../mods/" + NAME + "/" + "main.txt");
 }
