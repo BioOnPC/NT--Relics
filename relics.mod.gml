@@ -5,44 +5,48 @@
 		while(!mod_exists("mod", "libGeneral")){wait(1);}
 		call(["mod", "lib", "getRef"], "mod", mod_current, "scr");
 	
-		call(scr.obj_setup, mod_current, ["AnglerFish", "CubeGuardian", "EliteSniperDeath", "EliteSniper", "RelicsPlasma", "Guppy", "HeavyBandit", "HellKnight", "HellTorch", "Imp", "Jelly", "KnightQuake", "PlasmaEye", "SmallDog", "SodaBullet", "SodaMimic", "ShieldSpider"]);
+		call(scr.obj_setup, mod_current, ["AnglerFish", "CubeGuardian", "EliteSniperDeath", "EliteSniper", "RelicsPlasma", "Guppy", "HeavyBandit", "HellKnight", "HellTorch", "Imp", "Jelly", "KnightQuake", "PlasmaEye", "SmallDog", "SodaBullet", "SodaMimic", "ShieldSpider", "Thief"]);
+		exit;
 	}
 
 	global.spr = {};
 	
 	with(spr) {
 		var _p = "sprites/",
-			_s = "";
+			_s = "",
+			_n = "";
 		
 		//#region AREAS
 			_s = _p + "Areas/";
 			
 			//#region CASTLE
+				_n = _s + "Castle/";
+				
 				 // MISC
-                CastleIcon   = sprite_add(_s + "Castle/sprCastleIcon.png", 1, 8, 4);
-                CastleDetail = sprite_add(_s + "Castle/sprDetail.png",    5, 4, 4);
-                CastleDebris = sprite_add(_s + "Castle/sprDebris.png",    4, 4, 4);
+                CastleIcon   = sprite_add(_n + "sprCastleIcon.png", 1, 8, 4);
+                CastleDetail = sprite_add(_n + "sprDetail.png",    5, 4, 4);
+                CastleDebris = sprite_add(_n + "sprDebris.png",    4, 4, 4);
 			
 				 // FLOOR
-                CastleDecal      = sprite_add(_s + "Castle/sprDecal.png",		 2,  8, 24);
-                CastleFloor      = sprite_add(_s + "Castle/sprFloor.png",      4,  0,  0);
-                CastleFloorB     = sprite_add(_s + "Castle/sprFloorB.png",     4,  8,  8);
-                CastleFloorExplo = sprite_add(_s + "Castle/sprFloorExplo.png", 4,  1,  1);
+                CastleDecal      = sprite_add(_n + "sprDecal.png",		 2,  8, 24);
+                CastleFloor      = sprite_add(_n + "sprFloor.png",      4,  0,  0);
+                CastleFloorB     = sprite_add(_n + "sprFloorB.png",     4,  8,  8);
+                CastleFloorExplo = sprite_add(_n + "sprFloorExplo.png", 4,  1,  1);
                 
                  // WALLS
-                CastleTopDecal   = sprite_add(_s + "Castle/sprTopDecal.png",    3, 16, 16);
-                CastleWallBot    = sprite_add(_s + "Castle/sprWallBot.png",    4,  0,  0);
-                CastleWallOut    = sprite_add(_s + "Castle/sprWallOut.png",    1,  4,  8);
-                CastleWallTop    = sprite_add(_s + "Castle/sprWallTop.png",    4,  0,  0);
-                CastleWallTrans  = sprite_add(_s + "Castle/sprWallTrans.png",  3,  0,  0);
+                CastleTopDecal   = sprite_add(_n + "sprTopDecal.png",    3, 16, 16);
+                CastleWallBot    = sprite_add(_n + "sprWallBot.png",    4,  0,  0);
+                CastleWallOut    = sprite_add(_n + "sprWallOut.png",    1,  4,  8);
+                CastleWallTop    = sprite_add(_n + "sprWallTop.png",    4,  0,  0);
+                CastleWallTrans  = sprite_add(_n + "sprWallTrans.png",  3,  0,  0);
                 
                  // TORCHES
-                OldTorch     = sprite_add(_s + "Castle/sprTorch.png",     4, 12, 14);
-                OldTorchHurt = sprite_add(_s + "Castle/sprTorchHurt.png", 3, 12, 14);
-                OldTorchDead = sprite_add(_s + "Castle/sprTorchDead.png", 5, 12, 14);
+                OldTorch     = sprite_add(_n + "sprTorch.png",     4, 12, 14);
+                OldTorchHurt = sprite_add(_n + "sprTorchHurt.png", 3, 12, 14);
+                OldTorchDead = sprite_add(_n + "sprTorchDead.png", 5, 12, 14);
                 
-                TorchUnlit     = sprite_add(_s + "Castle/sprTorchUnlit.png",     1, 12, 14);
-                TorchUnlitHurt = sprite_add(_s + "Castle/sprTorchUnlitHurt.png", 3, 12, 14);
+                TorchUnlit     = sprite_add(_n + "sprTorchUnlit.png",     1, 12, 14);
+                TorchUnlitHurt = sprite_add(_n + "sprTorchUnlitHurt.png", 3, 12, 14);
 			//#endregion
 		//#endregion
 		
@@ -50,108 +54,142 @@
 			_s = _p + "Enemies/";
 		
 			//#region DESERT
+				_n = _s + "HeavyBandit/";
+				
 				 // Heavy Bandit
-				HeavyBanditIdle = sprite_add(_s + "HeavyBandit/sprHeavyBanditIdle.png", 4, 12, 12);
-				HeavyBanditWalk = sprite_add(_s + "HeavyBandit/sprHeavyBanditWalk.png", 6, 12, 12);
-				HeavyBanditHurt = sprite_add(_s + "HeavyBandit/sprHeavyBanditHurt.png", 3, 12, 12);
-				HeavyBanditDead = sprite_add(_s + "HeavyBandit/sprHeavyBanditDead.png", 7, 12, 12);
+				HeavyBanditIdle = sprite_add(_n + "sprHeavyBanditIdle.png", 4, 12, 12);
+				HeavyBanditWalk = sprite_add(_n + "sprHeavyBanditWalk.png", 6, 12, 12);
+				HeavyBanditHurt = sprite_add(_n + "sprHeavyBanditHurt.png", 3, 12, 12);
+				HeavyBanditDead = sprite_add(_n + "sprHeavyBanditDead.png", 7, 12, 12);
 			//#endregion
 			
 			//#region SCRAPYARD
+				_n = _s + "EliteSniper/";
+				
 				 // Elite Sniper
-				EliteSniperIdle = sprite_add(_s + "EliteSniper/sprEliteSniperIdle.png", 4, 16, 16);
-				EliteSniperWalk = sprite_add(_s + "EliteSniper/sprEliteSniperWalk.png", 6, 16, 16);
-				EliteSniperHurt = sprite_add(_s + "EliteSniper/sprEliteSniperHurt.png", 3, 16, 16);
-				EliteSniperDead = sprite_add(_s + "EliteSniper/sprEliteSniperDead.png", 6, 16, 16);
-				EliteSniperWeap = sprite_add(_s + "EliteSniper/sprEliteSniperRifle.png", 1, 17, 6);
+				EliteSniperIdle = sprite_add(_n + "sprEliteSniperIdle.png", 4, 16, 16);
+				EliteSniperWalk = sprite_add(_n + "sprEliteSniperWalk.png", 6, 16, 16);
+				EliteSniperHurt = sprite_add(_n + "sprEliteSniperHurt.png", 3, 16, 16);
+				EliteSniperDead = sprite_add(_n + "sprEliteSniperDead.png", 6, 16, 16);
+				EliteSniperWeap = sprite_add(_n + "sprEliteSniperRifle.png", 1, 17, 6);
+				
+				_n = _s + "SmallDog/";
 				
 				 // Small Dog
-				SmallDogIdle = sprite_add(_s + "SmallDog/sprSmallDogIdle.png", 6, 12, 12);
-				SmallDogWalk = sprite_add(_s + "SmallDog/sprSmallDogWalk.png", 6, 12, 12);
-				SmallDogHurt = sprite_add(_s + "SmallDog/sprSmallDogHurt.png", 3, 12, 12);
-				SmallDogDead = sprite_add(_s + "SmallDog/sprSmallDogDead.png", 6, 12, 12);
+				SmallDogIdle = sprite_add(_n + "sprSmallDogIdle.png", 6, 12, 12);
+				SmallDogWalk = sprite_add(_n + "sprSmallDogWalk.png", 6, 12, 12);
+				SmallDogHurt = sprite_add(_n + "sprSmallDogHurt.png", 3, 12, 12);
+				SmallDogDead = sprite_add(_n + "sprSmallDogDead.png", 6, 12, 12);
+				
+				_n = _s + "Thief/";
+				
+				 // Thief
+				ThiefIdle = sprite_add(_n + "sprThiefIdle.png", 4, 12, 12);
+				ThiefWalk = sprite_add(_n + "sprThiefWalk.png", 6, 12, 12);
+				ThiefHurt = sprite_add(_n + "sprThiefHurt.png", 3, 12, 12);
+				ThiefDead = sprite_add(_n + "sprThiefDead.png", 6, 12, 12);
+				ThiefGun = sprite_add(_n + "sprThiefGun.png", 1, -1, 2);
 			//#endregion
 			
 			//#region CRYSTAL CAVES
+				_n = _s + "ShieldSpider/";
+				
 				 // Shield Spider
-				ShieldSpiderIdle		 = sprite_add(_s + "ShieldSpider/sprShieldSpiderIdle.png", 6, 24, 24);
-				ShieldSpiderWalk		 = sprite_add(_s + "ShieldSpider/sprShieldSpiderWalk.png", 6, 24, 24);
-				ShieldSpiderHurt		 = sprite_add(_s + "ShieldSpider/sprShieldSpiderHurt.png", 3, 24, 24);
-				ShieldSpiderDead		 = sprite_add(_s + "ShieldSpider/sprShieldSpiderDead.png", 6, 24, 24);
-				ShieldSpiderShield  	 = sprite_add(_s + "ShieldSpider/sprShieldSpiderShield.png", 9, 24, 24);
-				ShieldSpiderShielded     = sprite_add(_s + "ShieldSpider/sprShieldSpiderShielded.png", 1, 24, 24);
-				ShieldSpiderShieldedHurt = sprite_add(_s + "ShieldSpider/sprShieldSpiderShieldedHurt.png", 3, 24, 24);
-				ShieldSpiderOff     	 = sprite_add(_s + "ShieldSpider/sprShieldSpiderShieldOff.png", 3, 24, 24);
+				ShieldSpiderIdle		 = sprite_add(_n + "sprShieldSpiderIdle.png", 6, 24, 24);
+				ShieldSpiderWalk		 = sprite_add(_n + "sprShieldSpiderWalk.png", 6, 24, 24);
+				ShieldSpiderHurt		 = sprite_add(_n + "sprShieldSpiderHurt.png", 3, 24, 24);
+				ShieldSpiderDead		 = sprite_add(_n + "sprShieldSpiderDead.png", 6, 24, 24);
+				ShieldSpiderShield  	 = sprite_add(_n + "sprShieldSpiderShield.png", 9, 24, 24);
+				ShieldSpiderShielded     = sprite_add(_n + "sprShieldSpiderShielded.png", 1, 24, 24);
+				ShieldSpiderShieldedHurt = sprite_add(_n + "sprShieldSpiderShieldedHurt.png", 3, 24, 24);
+				ShieldSpiderOff     	 = sprite_add(_n + "sprShieldSpiderShieldOff.png", 3, 24, 24);
 			//#endregion
 			
 			//#region FROZEN CITY
+				_n = _s + "SodaMimic/";
+				
 				 // Soda Mimic
-				SodaMimicIdle = sprite_add(_s + "SodaMimic/sprSodaMimicIdle.png", 1, 16, 16);
-				SodaMimicWalk = sprite_add(_s + "SodaMimic/sprSodaMimicWalk.png", 4, 16, 16);
-				SodaMimicHurt = sprite_add(_s + "SodaMimic/sprSodaMimicHurt.png", 3, 16, 16);
-				SodaMimicDead = sprite_add(_s + "SodaMimic/sprSodaMimicDead.png", 6, 16, 16);
-				SodaMimicTell = sprite_add(_s + "SodaMimic/sprSodaMimicTell.png", 13, 16, 16);
+				SodaMimicIdle = sprite_add(_n + "sprSodaMimicIdle.png", 1, 16, 16);
+				SodaMimicWalk = sprite_add(_n + "sprSodaMimicWalk.png", 4, 16, 16);
+				SodaMimicHurt = sprite_add(_n + "sprSodaMimicHurt.png", 3, 16, 16);
+				SodaMimicDead = sprite_add(_n + "sprSodaMimicDead.png", 6, 16, 16);
+				SodaMimicTell = sprite_add(_n + "sprSodaMimicTell.png", 13, 16, 16);
 			//#endregion
 			
 			//#region PALACE
+				_n = _s + "CubeGuardian/";
+				
 				 // Cube Guardian
-				CubeGuardianWalk		 = sprite_add(_s + "CubeGuardian/sprCubeGuardianWalk.png", 6, 32, 32);
-				CubeGuardianHurt		 = sprite_add(_s + "CubeGuardian/sprCubeGuardianHurt.png", 3, 32, 32);
-				CubeGuardianDead		 = sprite_add(_s + "CubeGuardian/sprCubeGuardianDead.png", 9, 32, 32);
-				CubeGuardianFireStart  	 = sprite_add(_s + "CubeGuardian/sprCubeGuardianFireStart.png", 9, 32, 64);
-				CubeGuardianFire         = sprite_add(_s + "CubeGuardian/sprCubeGuardianFire.png", 4, 32, 64);
-				CubeGuardianFireHurt     = sprite_add(_s + "CubeGuardian/sprCubeGuardianFireHurt.png", 4, 32, 64);
-				CubeGuardianFireEnd      = sprite_add(_s + "CubeGuardian/sprCubeGuardianFireEnd.png", 9, 32, 64);
+				CubeGuardianWalk		 = sprite_add(_n + "sprCubeGuardianWalk.png", 6, 32, 32);
+				CubeGuardianHurt		 = sprite_add(_n + "sprCubeGuardianHurt.png", 3, 32, 32);
+				CubeGuardianDead		 = sprite_add(_n + "sprCubeGuardianDead.png", 9, 32, 32);
+				CubeGuardianFireStart  	 = sprite_add(_n + "sprCubeGuardianFireStart.png", 9, 32, 64);
+				CubeGuardianFire         = sprite_add(_n + "sprCubeGuardianFire.png", 4, 32, 64);
+				CubeGuardianFireHurt     = sprite_add(_n + "sprCubeGuardianFireHurt.png", 4, 32, 64);
+				CubeGuardianFireEnd      = sprite_add(_n + "sprCubeGuardianFireEnd.png", 9, 32, 64);
 			//#endregion
 			
 			//#region CASTLE
+				_n = _s + "Imp/";
+				
         		 // Imp
-                ImpIdle   = sprite_add(_s + "Imp/sprImpIdle.png",   4, 16, 20);
-                ImpDash   = sprite_add(_s + "Imp/sprImpDash.png",   8, 24, 24);
-                ImpHurt   = sprite_add(_s + "Imp/sprImpHurt.png",   3, 16, 20);
-                ImpDead   = sprite_add(_s + "Imp/sprImpDead.png",   6, 16, 20);
-                Pitchfork = sprite_add(_s + "Imp/sprPitchfork.png", 1,  9,  6);
+                ImpIdle   = sprite_add(_n + "sprImpIdle.png",   4, 16, 20);
+                ImpDash   = sprite_add(_n + "sprImpDash.png",   8, 24, 24);
+                ImpHurt   = sprite_add(_n + "sprImpHurt.png",   3, 16, 20);
+                ImpDead   = sprite_add(_n + "sprImpDead.png",   6, 16, 20);
+                Pitchfork = sprite_add(_n + "sprPitchfork.png", 1,  9,  6);
                 
+				_n = _s + "Eye/";
                 
                  // Eye
-                EyeIdle = sprite_add(_s + "Eye/sprEyeIdle.png",     8, 12, 12);
-                EyeHurt = sprite_add(_s + "Eye/sprEyeHurt.png",     3, 12, 12);
-                EyeDead = sprite_add(_s + "Eye/sprEyeDead.png",     6, 12, 12);
+                EyeIdle = sprite_add(_n + "sprEyeIdle.png",     8, 12, 12);
+                EyeHurt = sprite_add(_n + "sprEyeHurt.png",     3, 12, 12);
+                EyeDead = sprite_add(_n + "sprEyeDead.png",     6, 12, 12);
                 
-                RelicsPlasma       = sprite_add(_s + "Eye/sprEnemyPlasma.png",       2, 12, 12);
-                RelicsPlasmaImpact = sprite_add(_s + "Eye/sprEnemyPlasmaImpact.png", 7, 16, 16);
-                RelicsPlasmaTrail  = sprite_add(_s + "Eye/sprEnemyPlasmaTrail.png",  3,  4,  4);
+                RelicsPlasma       = sprite_add(_n + "sprEnemyPlasma.png",       2, 12, 12);
+                RelicsPlasmaImpact = sprite_add(_n + "sprEnemyPlasmaImpact.png", 7, 16, 16);
+                RelicsPlasmaTrail  = sprite_add(_n + "sprEnemyPlasmaTrail.png",  3,  4,  4);
                 
+				_n = _s + "Knight/";
+				
                  // Knight
-                KnightIdle   = sprite_add(_s + "Knight/sprKnightIdle.png",   6, 26, 24);
-                KnightWalk   = sprite_add(_s + "Knight/sprKnightWalk.png",   8, 26, 24);
-                KnightHurt   = sprite_add(_s + "Knight/sprKnightHurt.png",   3, 26, 24);
-                KnightDead   = sprite_add(_s + "Knight/sprKnightDead.png",   5, 26, 24);
-                KnightSword  = sprite_add(_s + "Knight/sprKnightSword.png",  1,  2,  5);
+                KnightIdle   = sprite_add(_n + "sprKnightIdle.png",   6, 26, 24);
+                KnightWalk   = sprite_add(_n + "sprKnightWalk.png",   8, 26, 24);
+                KnightHurt   = sprite_add(_n + "sprKnightHurt.png",   3, 26, 24);
+                KnightDead   = sprite_add(_n + "sprKnightDead.png",   5, 26, 24);
+                KnightSword  = sprite_add(_n + "sprKnightSword.png",  1,  2,  5);
 			
 			//#endregion
 			
 			//#region DROWNED CITY
+				_n = _s + "AnglerFish/";
+				
 				 // Anglerfish
-				AnglerFishIdle = sprite_add(_s + "AnglerFish/sprAnglerFishIdle.png", 11, 15, 18);
-				AnglerFishWalk = sprite_add(_s + "AnglerFish/sprAnglerFishWalk.png", 6, 15, 19);
-				AnglerFishHurt = sprite_add(_s + "AnglerFish/sprAnglerFishHurt.png", 3, 15, 18);
-				AnglerFishDead = sprite_add(_s + "AnglerFish/sprAnglerFishDead.png", 6, 15, 18);
-			
+				AnglerFishIdle = sprite_add(_n + "sprAnglerFishIdle.png", 11, 15, 18);
+				AnglerFishWalk = sprite_add(_n + "sprAnglerFishWalk.png", 6, 15, 19);
+				AnglerFishHurt = sprite_add(_n + "sprAnglerFishHurt.png", 3, 15, 18);
+				AnglerFishDead = sprite_add(_n + "sprAnglerFishDead.png", 6, 15, 18);
+				
+				_n = _s + "BlowFish/";
+				
 				 // Blowfish
-				BlowFishIdle = sprite_add(_s + "BlowFish/sprBlowFishIdle.png", 4, 12, 12);
-				BlowFishWalk = sprite_add(_s + "BlowFish/sprBlowFishWalk.png", 6, 12, 12);
-				BlowFishHurt = sprite_add(_s + "BlowFish/sprBlowFishHurt.png", 3, 12, 12);
+				BlowFishIdle = sprite_add(_n + "sprBlowFishIdle.png", 4, 12, 12);
+				BlowFishWalk = sprite_add(_n + "sprBlowFishWalk.png", 6, 12, 12);
+				BlowFishHurt = sprite_add(_n + "sprBlowFishHurt.png", 3, 12, 12);
+				
+				_n = _s + "Guppy/";
 				
 				 // Guppy
-				GuppyIdle = sprite_add(_s + "Guppy/sprGuppyIdle.png", 6, 12, 12);
-				GuppyHurt = sprite_add(_s + "Guppy/sprGuppyHurt.png", 3, 12, 12);
-				GuppyDead = sprite_add(_s + "Guppy/sprGuppyDead.png", 11, 12, 12); 
+				GuppyIdle = sprite_add(_n + "sprGuppyIdle.png", 6, 12, 12);
+				GuppyHurt = sprite_add(_n + "sprGuppyHurt.png", 3, 12, 12);
+				GuppyDead = sprite_add(_n + "sprGuppyDead.png", 11, 12, 12); 
+				
+				_n = _s + "Jelly/";
 				
 				 // Jelly
-				JellyIdle = sprite_add(_s + "Jelly/sprJellyIdle.png", 12, 32, 32);
-				JellyHurt = sprite_add(_s + "Jelly/sprJellyHurt.png", 3, 32, 32);
-				JellyDead = sprite_add(_s + "Jelly/sprJellyDead.png", 7, 32, 32);
+				JellyIdle = sprite_add(_n + "sprJellyIdle.png", 12, 32, 32);
+				JellyHurt = sprite_add(_n + "sprJellyHurt.png", 3, 32, 32);
+				JellyDead = sprite_add(_n + "sprJellyDead.png", 7, 32, 32);
 			//#endregion
 		
 		//#endregion
@@ -185,66 +223,36 @@
 	area_variant_add(50, 1, "night desert", ["so cold", "cold-blooded", "ambush", "so quiet"], -1, -1, -1);
 
 #define level_start
-	if(instance_exists(GameCont) and GameCont.area = 101) with(instances_matching(Crab, "jellified", null)) {
-		jellified = true;
-		if(chance(1, 3)) call(scr.obj_create, x, y, "Jelly");
+	 // Jelly Spawns:
+	if(instance_exists(GameCont) and GameCont.area = 101) with(Crab) if(chance(1, 3)) {
+		call(scr.obj_create, x, y, "Jelly");
 	}
 	
-	with(instances_matching(SodaMachine, "mimicified", null)) {
-		mimicified = true;
-		if(chance(1, 10)) {
-			call(scr.obj_create, x, y, "SodaMimic");
-			instance_delete(self);
-		}
+	 // Secret:
+	with(SodaMachine) if(chance(1, 10)) {
+		instance_replace(self, "SodaMimic");
 	}
 	
-	with(instances_matching(Raven, "smalldogified", null)) {
-		smalldogified = true;
-		if(chance(1, 5)) {
-			call(scr.obj_create, x, y, "SmallDog");
-			instance_delete(self);
-		}
+	 // Small Dog Spawns:
+	with(Raven) if(chance(1, 5)) {
+		instance_replace(self, "SmallDog");
 	}
 	
-	with(instances_matching(ExploGuardian, "cubed", null)) {
-		cubed = true;
-		if(chance(1, 3)) {
-			call(scr.obj_create, x, y, "CubeGuardian");
-			instance_delete(self);
-		}
+	// Thief Spawns:
+	if(area_current[0] = 3) with(Bandit) if(chance(1, 3)) {
+		instance_replace(self, "Thief");
 	}
 	
-	with(instances_matching(Sniper, "eliteified", null)) {
-		eliteified = true;
-		if(chance(1 + (instance_exists(GameCont) ? GameCont.loops * 3 : 0), 20)) {
-			call(scr.obj_create, x, y, "EliteSniper");
-			instance_delete(self);
-		}
+	 // Cube Guardian Spawns:
+	with(ExploGuardian) if(chance(1, 3)) {
+		instance_replace(self, "CubeGuardian");
 	}
-	
-	with(instances_matching(Bandit, "eliteified", null)) {
-		eliteified = true;
-		if(instance_exists(GameCont) and GameCont.area = 1 and chance(min(1 + (instance_exists(GameCont) ? GameCont.loops * 3 : 0), 10), 20)) {
-			call(scr.obj_create, x, y, "HeavyBandit");
-			instance_delete(self);
-		}
-	}
-	
-	with(instances_matching(Spider, "eliteified", null)) {
-		eliteified = true;
-		if(chance(1 + (instance_exists(GameCont) ? GameCont.loops * 3 : 0), 20)) {
-			call(scr.obj_create, x, y, "ShieldSpider");
-			instance_delete(self);
-		}
-	}
-	
 
-	if(instance_exists(GameCont) and GameCont.area = 7 and GameCont.subarea = 1) {
+	 // Castle Entrance Spawns:
+	if(area_current[0] = 7 and area_current[1] = 1) {
 		with(instances_matching([Pillar, SmallGenerator], "", null)) {
 			if(array_length(instances_matching(CustomHitme, "name", "HellTorch")) = 0) {
-				with(call(scr.obj_create, x, y, "HellTorch")) name = "HellTorch";
-				
-				instance_delete(self);
+				instance_replace(self, "HellTorch");
 			}
 		}
 	}
@@ -257,6 +265,38 @@
         global.level_loading = false;
         level_start();
     }
+
+	 // Update logic
+	 // Runs the update() function whenever a new object is created, faster than with(instances_matching()) over and over
+	if("relics_id" not in GameCont) GameCont.relics_id = instance_max;
+	if(GameCont.relics_id < variable_instance_get(GameObject, "id", GameCont.relics_id)) {
+		var _newID = GameCont.relics_id;
+		GameCont.relics_id = instance_max;
+		
+		update(_newID);
+	}
+
+#define update(_newID)
+	 // Heavy Bandit Spawns:
+	if(area_current[0] = 1 and is_new(Bandit, _newID)){
+		with(instances_matching_gt(Bandit, "id", _newID)){
+			if(chance(min(1 + (loop_current * 3), 10), 20)) instance_replace(self, "HeavyBandit");
+		}
+	}
+	
+	 // Shield Spider Spawns:
+	if(is_new(Spider, _newID)){
+		with(instances_matching_gt(Spider, "id", _newID)){
+			if(chance(1 + (loop_current * 3), 20)) instance_replace(self, "ShieldSpider");
+		}
+	}
+	
+	 // Elite Sniper Spawns
+	if(is_new(Sniper, _newID)){
+		with(instances_matching_gt(Sniper, "id", _newID)){
+			if(chance(1 + (loop_current * 3), 20)) instance_replace(self, "EliteSniper");
+		}
+	}
 
 #define draw_bloom
 	 // Custom Bullets:
@@ -380,6 +420,7 @@
 
 #define cleanup
 	global.spr = null;
+	global.scr = null;
 
 #define AnglerFish_create(_x, _y)
 	with(instance_create(_x, _y, CustomEnemy)) {
@@ -474,6 +515,108 @@
 	enemy_face(direction);
 
 #define AnglerFish_alrm2
+	repeat(4) {
+		call(scr.fx, x, y, [gunangle + orandom(20), 3 + random(3)], Dust);
+	}
+	
+	image_angle = 0;
+	
+	sound_play_pitchvol(sndSwapFlame, 2.4 + random(0.2), 0.4);
+	sound_play_pitchvol(sndFlameCannonEnd, 2.8 + random(0.2), 0.2);
+
+#define BlowFish_create(_x, _y)
+	with(instance_create(_x, _y, CustomEnemy)) {
+		 // Visual:
+		spr_idle   = spr.BlowFishIdle;
+		spr_walk   = spr.BlowFishWalk;
+		spr_hurt   = spr.BlowFishHurt;
+		spr_dead   = spr.BlowFishDead;
+		spr_shadow = shd24;
+		//spr_shadow_x = -1;
+		//spr_shadow_y = ;
+		hitid      = [spr_idle, "BLOW FISH"];
+		depth      = -2;
+
+		 // Sound:
+		snd_hurt = sndOasisHurt;
+		snd_dead = sndOasisDeath;
+		
+		 // Vars:
+		mask_index  = mskBandit;
+		maxhealth   = 16;
+		raddrop     = 10;
+		size        = 1;
+		walk	    = 0;
+		walkspeed   = 0.8;
+		maxspeed    = 3.5;
+		gunangle    = random(360);
+		direction   = gunangle;
+		charge      = false;
+		meleedamage = 4;
+		
+		 // Alarms:
+		alarm1 = 40 + irandom(10);
+		
+		return self;
+	}
+
+#define BlowFish_step
+	enemy_step();
+	if(alarm2_run) exit;
+	
+	if(alarm2) {
+		motion_add(gunangle, maxspeed);
+		image_angle = gunangle - 90;
+		if(chance_ct(3, 4)) {
+			sound_play_pitch(sndOasisCrabAttack, 0.6 + random(0.3));
+			call(scr.fx, x, y, [direction + 180 + orandom(4), 1 + random(2)], FishBoost);
+		}
+	}
+
+#define BlowFish_alrm1
+	alarm1 = 40 + irandom(10);
+	
+	if(enemy_target(x, y) and target_visible) {
+		if(target_distance < 108 and chance(2, 3)) {
+			alarm1 = 40 + irandom(10);
+			gunangle = target_direction + orandom(10);
+			
+			repeat(4) {
+				call(scr.fx, x, y, [gunangle + 180 + orandom(20), 1 + random(2)], FishBoost);
+			}
+			
+			call(scr.fx, x, y, 0, AssassinNotice);
+			
+			direction = gunangle;
+			
+			if(fork()) {
+				wait 6;
+				if(!instance_exists(self)) exit;
+				enemy_walk(gunangle, alarm1 - 6);
+				alarm2 = walk;
+				exit;
+			}
+			
+			sound_play_pitch(sndOasisHorn, 1.1 + random(0.4));
+			sound_play_pitch(sndOasisMelee, 0.7 + random(0.4));
+			sound_play_pitchvol(sndFishTB, 1.2 + random(0.2), 0.7);
+			sound_play_pitch(sndFreakHurt, 0.5 + random(0.3));
+		}
+		
+		else {
+			gunangle = target_direction + orandom(30);
+			enemy_walk(gunangle, alarm1 - 10);
+		}
+	}
+	
+	else {
+		gunangle = random(360);
+		enemy_walk(gunangle, alarm1 - 10);
+	}
+	
+	enemy_face(direction);
+
+#define BlowFish_alrm2
 	repeat(4) {
 		call(scr.fx, x, y, [gunangle + orandom(20), 3 + random(3)], Dust);
 	}
@@ -1936,6 +2079,159 @@
 #define ShieldSpider_death
 	repeat(2) pickup_drop(70, 10, 2);
 
+#define Thief_create(_x, _y)
+	with(instance_create(_x, _y, CustomEnemy)) {
+		 // Visual:
+		spr_idle   = spr.ThiefIdle;
+		spr_walk   = spr.ThiefWalk;
+		spr_hurt   = spr.ThiefHurt;
+		spr_dead   = spr.ThiefDead;
+		spr_weap   = spr.ThiefGun;
+		spr_shadow = shd24;
+		hitid      = [spr_idle, "THIEF"];
+		depth      = -2;
+
+		 // Sound:
+		snd_hurt = sndFreakHurt;
+		snd_dead = sndFreakDead;
+		
+		 // Vars:
+		mask_index  = mskBandit;
+		maxhealth   = 8;
+		raddrop     = 8;
+		size        = 1;
+		walk	    = 0;
+		walkspeed   = 0.8;
+		maxspeed    = 4;
+		gunangle    = random(360);
+		direction   = gunangle;
+		stealth 	= 0;
+		stolen      = 0;
+		
+		 // Alarms:
+		alarm1 = 50 + irandom(20);
+		
+		return self;
+	}
+
+#define Thief_step
+	enemy_step();
+	if(alarm2_run) exit;
+
+	stealth = lerp_ct(stealth, 0, 0.15);
+
+#define Thief_alrm1
+	alarm1 = 20 + irandom(20);
+	
+	if(enemy_target(x, y) and target_visible) {
+		if(target_distance < 128) {
+			if(target_distance < 40) {
+				if(chance(3, 4)) {
+					alarm1 = 30 + irandom(20);
+					gunangle = target_direction + orandom(10);
+					direction = gunangle;
+					
+					call(scr.fx, x, y, 0, AssassinNotice);
+					sound_play_pitch(sndMimicHurt, 1.4 + random(0.2));
+					
+					stealth = 1;
+					alarm2 = 12 + irandom(4);
+					
+					sound_play_pitchvol(sndSwapPistol, 1.2 + random(0.2), 0.4);
+				}
+				
+				else {
+					gunangle = target_direction + 180 + orandom(40);
+					enemy_walk(gunangle, alarm1 - 5);
+				}
+			}
+			
+			else {
+				alarm1 = min(max(target_distance * walkspeed, 10), 30 + random(10));
+				gunangle = target_direction + orandom(20);
+				enemy_walk(gunangle, max(alarm1 - 5, 10));
+			}
+		}
+		else if(chance(1, 3)) {
+			alarm1 = 40 + irandom(20);
+			gunangle = target_direction + orandom(10);
+			
+			stealth = 1;
+			
+			call(scr.projectile_create, self, x, y, EnemyBullet1, gunangle, 4);
+			sound_play_pitch(sndEnemyFire, 1.2 + random(0.2));
+		}
+		
+		else if(chance(1, 2)) {
+			alarm1 = 50 + random(20);
+			gunangle = target_direction + orandom(20);
+			enemy_walk(gunangle, alarm1 - 20);
+		}
+	}
+	
+	else {
+		gunangle = random(360);
+		enemy_walk(gunangle, alarm1 - 20);
+	}
+	
+	direction = gunangle;
+	enemy_face(direction);
+
+#define Thief_alrm2
+	if(enemy_target(x, y)) gunangle = target_direction;
+	
+	var _pos = [x + lengthdir_x((sprite_width * 0.75) * image_xscale, gunangle), y + lengthdir_y((sprite_height * 0.75) * image_yscale, gunangle)],
+		_targ = call(scr.instances_in_rectangle, _pos[0] - 16, _pos[1] - 16, _pos[0] + 16, _pos[1] + 16, Player);
+
+	if(array_length(_targ)) {
+		call(scr.fx, _pos[0], _pos[1], 0, ChickenB).depth = depth - 1;
+		
+		with(_targ) {
+			var _a	   = irandom_range(1, 5),
+				_taken = 0;
+			if(ammo[_a] > 0) {
+				_taken = min(ammo[_a], typ_ammo[_a])
+				with(call(scr.fx, x, y, 0, PopupText)) {
+					mytext = _taken = other.ammo[_a] ? `EMPTY` : `-${_taken} ${other.typ_name[_a]}`;
+				}
+				ammo[_a] -= _taken;
+				
+				with(other) {
+					sound_play_pitch(sndAmmoChest, 0.8 + random(0.2));
+					sound_play_pitch(sndChickenReturn, 1.6 + random(0.2));
+					sound_play_pitch(sndHPMimicTaunt, 0.5 + random(0.2));
+					
+					stolen++;
+				}
+			}
+		}
+
+		alarm1 = 80;
+		enemy_walk(gunangle + 180, alarm1 - 20);
+		enemy_look(direction);
+	}
+	
+	else {
+		sound_play_pitch(sndPickupDisappear, 1.4 + random(0.2));
+		sound_play_pitch(sndChickenThrow, 1.6 + random(0.2));
+		call(scr.fx, _pos[0], _pos[1], 0, RabbitPaw).depth = depth - 1;
+	}
+
+#define Thief_draw
+	var _vis = max(0.1, image_alpha * max(speed/(maxspeed + 5), stealth)) * visible;
+	if(gunangle <= 180) draw_weapon(spr_weap, 0, x, y, gunangle, 0, wkick, right, image_blend, _vis); 
+	draw_set_alpha(_vis);
+	draw_sprite_ext(sprite_index, image_index, x, y, image_xscale * right, image_yscale, image_angle, image_blend, _vis);
+	draw_set_alpha(1);
+	if(gunangle > 180) draw_weapon(spr_weap, 0, x, y, gunangle, 0, wkick, right, image_blend, _vis);
+	
+#define Thief_death
+	pickup_drop(70, 10);
+
+	repeat(stolen) {
+		pickup_drop(100, 0);
+	}
+
 #macro  spr                                                                                     global.spr
 #macro  snd                                                                                     global.snd
 #macro  msk                                                                                     spr.msk
@@ -1980,6 +2276,9 @@
 #macro  alarm7_run                                                                              alarm7 && !--alarm7 && !--alarm7 && (script_ref_call(on_alrm7) || !instance_exists(self))
 #macro  alarm8_run                                                                              alarm8 && !--alarm8 && !--alarm8 && (script_ref_call(on_alrm8) || !instance_exists(self))
 #macro  alarm9_run                                                                              alarm9 && !--alarm9 && !--alarm9 && (script_ref_call(on_alrm9) || !instance_exists(self))
+#macro  instance_max																			instance_create(0, 0, DramaCamera)
+#macro  loop_current																			instance_exists(GameCont) ? GameCont.loops * 3 : 0
+#macro  area_current																			instance_exists(GameCont) ? [GameCont.area, GameCont.subarea] : [-1, -1] 
 #define chance(_numer, _denom)                                                          		return  random(_denom) < _numer;
 #define chance_ct(_numer, _denom)                                                       		return  random(_denom) < _numer * current_time_scale;
 #define orandom(_num)                                                                   		return  random_range(-_num, _num);
@@ -2189,3 +2488,15 @@
 			}
 		}
 	}
+	
+#define is_new(_obj, _newID)
+	return (instance_exists(_obj) && _obj.id > _newID)
+	
+#define instance_replace(_id, _obj)
+	with(_id) {
+		var o = call(scr.obj_create, x, y, _obj);
+		instance_delete(self);
+		return o;
+	}
+
+#define lerp_ct(_val1, _val2, _amount)                                                  return  lerp(_val2, _val1, power(1 - _amount, current_time_scale));
