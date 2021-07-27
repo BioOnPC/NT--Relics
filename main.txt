@@ -1,3 +1,2 @@
 /loadmod libLoader
-/loadmod AutoUpdate
 /load main2

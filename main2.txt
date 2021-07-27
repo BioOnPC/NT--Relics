@@ -1,4 +1,3 @@
-/allowmod AutoUpdate.mod
 /allowmod libLoader
 
 /loadmod relics
