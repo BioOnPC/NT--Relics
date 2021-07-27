@@ -6,6 +6,9 @@
 //You can also just copy this file into yours if it's a one-file-mod, but it's not as recommended.
 
 #define init
+loadLib();
+
+#define loadLib
 //if lib is already loaded we do not need to reload it
 if(!mod_exists("mod", "lib")){
 

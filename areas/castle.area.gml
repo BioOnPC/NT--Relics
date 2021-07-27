@@ -7,8 +7,8 @@
 	return [area_palace, 3];
 #define area_background_color  return make_color_rgb(69, 80, 95);
 #define area_shadow_color      return c_black;
-#define area_darkness          return false;
-#define area_secret            return false;
+#define area_darkness          return true;
+#define area_secret            return true;
 
 #define area_name(_subarea, _loops)
 	return `@1(${spr.CastleIcon})7-${_subarea}`;
@@ -155,7 +155,7 @@
 	
 	if(random(4) < 1) _e = choose("PlasmaEye", "HellKnight");
 	if(styleb and random(4) < 1) _e = "HellKnight";
-	if(random(8) < 1) call(scr.obj_create, _x, _y, _e);
+	if(random(7) < 1) call(scr.obj_create, _x, _y, _e);
 	
 #define area_pop_props
 	var	_x = x + 16,
