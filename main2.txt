@@ -4,6 +4,7 @@
 
 // -- CHARACTERS -- //
 /loadrace characters/brute
+/loadrace characters/turret
 
 // -- AREAS -- //
 /loadarea areas/castle
