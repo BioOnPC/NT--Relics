@@ -71,6 +71,7 @@ if(!mod_exists("mod", "lib")){
 		while (!file_exists("../../mods/lib/main2.txt")) {wait 1;}
 	}
 
+	if(mod_exists("mod", "lib")){exit;}
 	mod_loadtext("lib/main.txt");
 	wait(1);
 	mod_variable_set("mod", "lib", "canLoad", !global.err);
