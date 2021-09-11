@@ -1,6 +1,6 @@
 #define init
-	global.sprIdle   = sprite_add("../sprites/Characters/Brute/sprBruteIdle.png", 18, 12, 12);
-	global.sprWalk   = sprite_add("../sprites/Characters/Brute/sprBruteWalk.png", 10, 12 , 12);
+	global.sprIdle   = sprite_add("../sprites/Characters/Brute/sprBruteIdle.png", 8, 12, 12);
+	global.sprWalk   = sprite_add("../sprites/Characters/Brute/sprBruteWalk.png", 9, 12 , 12);
 	global.sprHurt   = sprite_add("../sprites/Characters/Brute/sprBruteHurt.png", 3, 12, 12);
 	global.sprDead   = sprite_add("../sprites/Characters/Brute/sprBruteDead.png", 6, 12 , 12);
 	global.sprPort   = sprite_add("../sprites/Characters/Brute/sprBrutePortrait.png", 1, 40, 231);
@@ -47,18 +47,18 @@
 
 #define race_ultra_name
 	switch(argument0){
-		case 1: return "RUSHDOWN";
-		case 2: return "ULTRA B";
+		case 1: return "HAYMAKER";
+		case 2: return "CROSS COUNTER";
 		case 3: if(mod_exists("mod", "metamorphosis")) return "ULTRA C";
-		case 4: if(mod_exists("mod", "LOMutsSprites")) return "ULTRA D";
+		case 4: if(mod_exists("mod", "LOMutsSprites")) return "ROUND START";
 	}
 
 #define race_ultra_text 
 	switch (argument0){
-		case 1: return "@rPUNCH KILLS@s GRANT @wINVULNERABILITY@s#@dNYI@s";
-		case 2: return "@wABSORB@s AND @wRETURN@s#BULLETS DESTROYED BY YOUR @rPUNCH@s#@dNYI@s";
-		case 3: if(mod_exists("mod", "metamorphosis")) return "@wSTUN@s NEARBY ENEMIES#AFTER TAKING @rLETHAL DAMAGE@s#@dNYI@s";
-		case 4: if(mod_exists("mod", "LOMutsSprites")) return "@dNYI@s";
+		case 1: return "@rPUNCH KILLS OVERHEAL@s@dNYI@s";
+		case 2: return "@wCATCH PROJECTILES@s WHILE#READYING A @rPUNCH@s";
+		case 3: if(mod_exists("mod", "metamorphosis")) return "@dNYI@s";
+		case 4: if(mod_exists("mod", "LOMutsSprites")) return "REMEMBER YOUR @rTRAINING@s#@dNYI@s";
 	}
 	
 #define race_mapicon
@@ -73,6 +73,7 @@
 
 #define create
 	assign_sprites();
+	assign_sounds();
 	
 	if(instance_is(self, Player)) {
 		maxspeed -= 0.5;
@@ -82,6 +83,7 @@
 		chrg_mult = (skill_get(mut_throne_butt) ? 0.1 : 0.06);
 		
 		brutedie = 1;
+		brutehand = noone;
 		
 		footkind = 3; // cool footstep sounds
 	}
@@ -123,6 +125,14 @@
 	if(canspec and (button_check(index, "spec") or usespec)) {
 		if(button_pressed(index, "spec")) {
 			fist_chrg = 0;
+			
+			if(ultra_get(mod_current, 2) and !instance_exists(brutehand)) {
+				with(call(scr.obj_create, x, y, "BruteHold")) {
+					creator = other;
+					team    = creator.team;
+					other.brutehand = self;
+				}
+			}
 		}
 		
 		if(fist_chrg < chrg_max) {
@@ -152,6 +162,7 @@
 				}
 			}
 			
+			//sound_play_pitch(skill_get(mut_throne_butt) ? snd_tbch : snd_chrg, 1 + random(0.3));
 			sound_play_pitchvol(sndJackHammer, 0.2 + (fist_chrg/chrg_max) + random(0.1), 0.4);
 			if(fist_chrg > 2) {
 				sound_play_pitchvol(sndSnowTankShoot, 1.4 + (fist_chrg/chrg_max) + random(0.1), 0.4)
@@ -172,6 +183,9 @@
 				}
 			}
 		}
+		
+		/*var _tb = skill_get(mut_throne_butt) ? snd_tbch : snd_chrg;
+		if(!audio_is_playing(_tb)) sound_play_pitch(_tb, 1);*/
 	}
 	
 	else {
@@ -279,8 +293,14 @@
 				sound_play_pitch(sndNadeReload, 0.7 + random(0.2));
 				sound_play_pitch(sndSuperFlakExplode, 1.4 + random(0.2));
 				sound_play_pitch(sndFlameCannon, 1.7 + random(0.2));
+				var _tb = skill_get(mut_throne_butt) ? snd_tbpn : snd_pnch;
+				sound_play_pitch(_tb[irandom(array_length(_tb) - 1)], 1 + random(0.3));
+				sound_stop(snd_chrg);
+				sound_stop(snd_tbch);
 				
 				fist_chrg = -20;
+				
+				nexthurt = current_frame + 12;
 			}
 			
 			else {
@@ -314,11 +334,23 @@
 	if(fist_chrg > 0) {
 		speed = clamp(speed, speed, maxspeed - (fist_chrg * 0.25));
 	}
+	
+	if(instance_exists(brutehand)) {
+		if(!canspec or (!button_check(index, "spec") and !usespec)) with(brutehand) instance_destroy();
+		else {
+			brutehand.direction = other.gunangle;
+		}
+	}
 
 #define draw
 	var pos = [x - lengthdir_x(fist_chrg * 2, gunangle) + (orandom(fist_chrg) * 0.40), y - lengthdir_y(fist_chrg * 2, gunangle) + (orandom(fist_chrg) * 0.40)];
 
 	draw_sprite_ext(global.sprHand, (min(abs(fist_chrg), 1)/1) * 3, pos[0], pos[1], 1, right, gunangle + (fist_chrg * 3), image_blend, abs(fist_chrg)/0.75);
+	if(instance_exists(brutehand)) {
+		var _v = orandom(0.1);
+		draw_sprite_ext(mskExploder, 0, brutehand.x, brutehand.y, max(0, fist_chrg/chrg_max + _v), max(0, fist_chrg/chrg_max + _v), 0, c_white, image_alpha * 0.4);
+		draw_sprite_ext(global.sprHand, 0, brutehand.x, brutehand.y, 1, right, gunangle + (fist_chrg * 3), image_blend, abs(fist_chrg)/0.75);
+	}
 	draw_sprite_ext(sprGroundFlameBig, -1, pos[0], pos[1] - 3, right, image_yscale, image_angle, c_lime, (fist_chrg - 4)/chrg_max);
 
 #define assign_sprites
@@ -338,20 +370,27 @@
 	}*/
 
 #define assign_sounds
-	/*snd_hurt = snd.EffigyHurt;
-	snd_dead = snd.EffigyDead;
-	snd_lowa = snd.EffigyLowAM;
-	snd_lowh = snd.EffigyLowHP;
-	snd_wrld = snd.EffigyWorld;
-	snd_crwn = snd.EffigyConfirm;
-	snd_chst = snd.EffigyChest;
-	snd_valt = snd.EffigyVault;
-	snd_thrn = snd.EffigyVault;
-	snd_spch = snd.EffigyThrone;
-	snd_idpd = snd.EffigyIDPD;
-	snd_cptn = snd.EffigyCaptain;*/
+	snd_hurt = snd.BruteHurt;
+	snd_dead = snd.BruteDead;
+	snd_lowa = snd.BruteLowA;
+	snd_lowh = snd.BruteLowH;
+	snd_wrld = snd.BruteWrld;
+	snd_crwn = snd.BruteValt;
+	snd_chst = snd.BruteChst;
+	snd_valt = snd.BruteValt;
+	snd_thrn = snd.BruteValt;
+	snd_spch = snd.BruteSpch;
+	snd_idpd = snd.BruteIDPD;
+	snd_cptn = snd.BruteCptn;
+	
+	
+	snd_chrg = snd.BruteChrg;
+	snd_tbch = snd.BruteTBChrg;
+	snd_pnch = [snd.BrutePnch1, snd.BrutePnch2, snd.BrutePnch3];
+	snd_tbpn = [snd.BruteTBPnch1, snd.BruteTBPnch2, snd.BruteTBPnch3, snd.BruteTBPnch4];
 
 #macro  scr																						mod_variable_get("mod", "relics", "scr")
+#macro  snd																						mod_variable_get("mod", "relics", "snd")
 #macro  call																					script_ref_call
 #define orandom(_num)
 	return mod_script_call("mod", "relics", "orandom", _num);

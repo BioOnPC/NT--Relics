@@ -1,14 +1,18 @@
 #define init
 	if(fork()) {
+		global.libLoaded = false;
+		
 		while(!mod_exists("mod", "lib")){wait(1);}
 		mod_script_call("mod", "lib", "import", "libAreas");
 		mod_script_call("mod", "lib", "import", "libEvents");
 		mod_script_call("mod", "lib", "import", "libAutoUpdate");
 		while(!mod_exists("mod", "libGeneral") and !mod_exists("mod", "libAreas") and !mod_exists("mod", "libEvents") and !mod_exists("mod", "libAutoUpdate")){wait(1);}
 		
+		global.libLoaded = true;
+		
 		call(["mod", "lib", "getRef"], "mod", mod_current, "scr");
 		
-		call(scr.obj_setup, mod_current, ["AnglerFish", "CubeGuardian", "Dozer", "EliteOverseer", "EliteSniper", "EliteSniperDeath", "RelicsBullet", "RelicsPlasma", "Guppy", "HeavyBandit", "HellKnight", "HellTorch", "Imp", "Jelly", "KnightQuake", "Overseer", "OverseerPortal", "OverseerStrike", "PlasmaEye", "SmallDog", "SodaBullet", "SodaMimic", "ShieldSpider", "Thief"]);
+		call(scr.obj_setup, mod_current, ["AnglerFish", "BruteHold", "CubeGuardian", "Dozer", "EliteOverseer", "EliteSniper", "EliteSniperDeath", "RelicsBullet", "RelicsPlasma", "Guppy", "HeavyBandit", "HellKnight", "HellTorch", "Imp", "Jelly", "KnightQuake", "Overseer", "OverseerPortal", "OverseerStrike", "PlasmaEye", "SmallDog", "SodaBullet", "SodaMimic", "ShieldSpider", "Thief", "WepTurret"]);
 		
 		call(scr.event_add, "LawEnforcement", mod_current);
 		call(scr.event_add, "SkatingRink", mod_current);
@@ -21,6 +25,9 @@
 	    	repeat(17) trace("");
 	    	trace_color("Thanks for playing Relics!", c_maroon);
 	    	trace_color("This mod is still in beta, so make sure to let tildebee in the NT discord (discord.gg/nt) know if you find any bugs!", c_aqua);
+	    	
+	    	wait 2;
+	    	
 	    	call(scr.autoupdate, "Relics", "BioOnPC/NT--Relics");
 	    	exit;
 	    }
@@ -83,6 +90,21 @@
                 
                 TorchUnlit     = sprite_add(_n + "sprTorchUnlit.png",     1, 12, 14);
                 TorchUnlitHurt = sprite_add(_n + "sprTorchUnlitHurt.png", 3, 12, 14);
+			//#endregion
+		//#endregion
+		
+		//#region CHARACTERS
+			_s = _p + "Characters/"
+			
+			//#region TURRET
+				_n = _s + "Turret/"
+				
+				 // Sentry
+				SentryIdle = sprite_add(_n + "sprSentry.png", 1, 12, 12);
+				SentryFire = sprite_add(_n + "sprSentryFire.png", 3, 12, 12);
+				SentryPlce = sprite_add(_n + "sprSentryPlace.png", 5, 12, 20);
+				SentryHurt = sprite_add(_n + "sprSentryHurt.png", 3, 12, 12);
+				SentryDead = sprite_add(_n + "sprSentryDead.png", 6, 12, 12);
 			//#endregion
 		//#endregion
 		
@@ -277,8 +299,70 @@
 			//#endregion
 		//#endregion
 		
+		//#region CHARACTERS
+			var char_snds = ["Hurt", "Dead", "LowA", "LowH", "Wrld", "Chst", "Valt", "Spch", "IDPD", "Cptn", "Slct", "Cnfm"];
+			
+			_s = _p + "Characters/";
+		
+			//#region BRUTE
+				_n = _s + "Brute/";
+			
+				with(char_snds) {
+					variable_instance_set(snd, "Brute" + self, sound_add(`${_n}sndBrute${self}.ogg`));
+				}
+				
+				BruteChrg = sound_add(_n + "sndBruteChrg.ogg");
+				BruteTBChrg = sound_add(_n + "sndBruteTBChrg.ogg");
+				BrutePnch1 = sound_add(_n + "sndBrutePnch1.ogg");
+				BrutePnch2 = sound_add(_n + "sndBrutePnch2.ogg");
+				BrutePnch3 = sound_add(_n + "sndBrutePnch3.ogg");
+				BruteTBPnch1 = sound_add(_n + "sndBruteTBPnch1.ogg");
+				BruteTBPnch2 = sound_add(_n + "sndBruteTBPnch2.ogg");
+				BruteTBPnch3 = sound_add(_n + "sndBruteTBPnch3.ogg");
+				BruteTBPnch4 = sound_add(_n + "sndBruteTBPnch4.ogg");
+			//#endregion
+			
+			//#region TURRET
+				_n = _s + "Turret/";
+			
+				with(char_snds) {
+					variable_instance_set(snd, "Turret" + self, sound_add(`${_n}sndTurret${self}.ogg`));
+				}
+				
+				TurretPlce = sound_add(_n + "sndTurretPlce.ogg");
+				
+			//#endregion
+		
+		//#endregion
+		
 		//#region ENEMIES
 			_s = _p + "Enemies/";
+			
+			//#region DESERT
+				_n = _s + "HeavyBandit/";
+				
+				 // Heavy Bandit
+				 HeavyBanditWarn = sound_add(_n + "sndHeavyBanditWarn.ogg");
+				 HeavyBanditDead = sound_add(_n + "sndHeavyBanditDead.ogg");
+				 HeavyBanditHurt = sound_add(_n + "sndHeavyBanditHurt.ogg");
+			//#endregion
+			
+			//#region CASTLE
+				_n = _s + "Imp/";
+				
+				 // Imp
+				 ImpHurt = sound_add(_n + "sndImpHurt.ogg");
+				 ImpDead = sound_add(_n + "sndImpDead.ogg");
+				 ImpFly  = sound_add(_n + "sndImpFly.ogg");
+			
+				_n = _s + "Knight/";
+				
+				 // Knight
+				 KnightWarn = sound_add(_n + "sndKnightWarn.ogg");
+				 KnightDead = sound_add(_n + "sndKnightDead.ogg");
+				 KnightHurt = sound_add(_n + "sndKnightHurt.ogg");
+				 KnightFire = sound_add(_n + "sndKnightFire.ogg");
+			//#endregion
 			
 			//#region IDPD
 				_n = _s + "IDPDOverseer/";
@@ -315,10 +399,67 @@
 	}
 	//#endregion
 
-	global.law_enforcement = [1, 0];
+	global.law_enforcement = 0;
 
 #define game_start
-	global.law_enforcement = [1, 0];
+	with(instances_matching(Player, "race", "brute", "turret")) {
+		var _r = string_upper(string_char_at(race, 1)) + string_copy(race, 2, string_length(race));
+		sound_play(lq_get(snd, `${_r}Cnfm`));
+	}
+
+	global.law_enforcement = 0;
+
+#define step
+	if(!global.libLoaded){ exit; }
+
+	 // Character Selection Sound:
+	if(instance_exists(CharSelect) and instance_exists(Menu)) {
+    	var _race = [];
+		for(var i = 0; i < maxp; i++){
+		    _race[i] = player_get_race(i);
+		    if(fork()) {
+		    	wait 1;
+		    	
+				var r = player_get_race(i);
+				if(instance_exists(CharSelect) and instance_exists(Menu) and _race[i] != r) {
+					switch(r) {
+						case "brute": sound_play(snd.BruteSlct); break;
+						case "turret": sound_play(snd.TurretSlct); break;
+					}
+				}
+				_race[i] = r;
+				
+				exit;
+		    }
+		}
+		
+		with(instances_matching(Campfire, "relicschars", null)) {
+			relicschars = true;
+			
+			/*with(["brute", "turret"]) {
+				var _s = self,
+					_r = string_upper(string_char_at(self, 1)) + string_copy(self, 2, string_length(self));;
+				with(Floor) {
+					if(!array_length(call(scr.instances_meeting, x, y, [CampChar, prop])) and !array_length(instances_matching(CampChar, "race", _s))) {
+						with(instance_create(x + (sprite_width/2), y + (sprite_height/2), CampChar)){
+							lastx = x;
+							lasty = y;
+							sprite_index = mod_variable_get("race", _s, `sprIdle`); //${_r}
+							spr_to = sprite_index;
+							spr_from = sprite_index;
+							spr_slct = sprite_index;
+							spr_menu = sprite_index;
+							race = _s;
+							
+							with(instances_matching(CharSelect, "race", race)) {
+								//while(other.num < index + 1) other.num++;
+							}
+						}
+					}
+				}
+			}*/
+		}
+	}
 
 #define level_start
 	 // Jelly Spawns:
@@ -384,6 +525,34 @@
 			}
 		}
 	}
+
+#define draw
+	with(instances_matching(CustomHitme, "name", "WepTurret")) if(instance_exists(creator) and weapon_get_type(wep)) {
+    	var _d = point_distance(x, y, creator.x, creator.y),
+    		_t = weapon_get_type(wep),
+    		_s = sprBulletIcon;
+    	
+    	
+    	if(_d <= 128) {
+    		switch(_t) {
+    			case 2: _s = sprShotIcon; break;
+    			case 3: _s = sprBoltIcon; break;
+    			case 4: _s = sprExploIcon; break;
+    			case 5: _s = sprEnergyIcon; break;
+    		}
+    		
+    		if(shine) {
+    			draw_sprite(asset_get_index(`${sprite_get_name(_s)}BG`), 2, x - 6, y - 24);
+    		}
+    		
+    		draw_set_alpha(1 - ((_d - 64)/128));
+    		
+    		draw_sprite(asset_get_index(`${sprite_get_name(_s)}BG`), 1, x - 6, y - 24);
+    		draw_sprite(_s, sprite_get_number(_s) * (1 - ammo/maxammo), x - 6, y - 24);
+    		
+    		draw_set_alpha(1);
+    	}
+    }
 
 #define draw_bloom
 	 // Custom Bullets:
@@ -728,6 +897,53 @@
 	sound_play_pitchvol(sndSwapFlame, 2.4 + random(0.2), 0.4);
 	sound_play_pitchvol(sndFlameCannonEnd, 2.8 + random(0.2), 0.2);
 
+#define BruteHold_create(_x, _y)
+	with(instance_create(_x, _y, CustomObject)) {
+		creator = noone;
+		held    = [];
+		team	= 0;
+		
+		mask_index = mskExploder;
+		image_speed = 0;
+		
+		return self;
+	}
+	
+#define BruteHold_step
+	if(!instance_exists(creator)) instance_destroy();
+	
+	else if(creator.object_index = Player and creator.race = "brute") {
+		x = creator.x + lengthdir_x(creator.fist_chrg * 4, direction);
+		y = creator.y + lengthdir_y(creator.fist_chrg * 4, direction);
+	}
+
+	with(call(scr.instances_meeting, x, y, instances_matching_ne(projectile, "team", team))) {
+		array_push(other.held, call(scr.variable_instance_get_list, id));
+		sound_play_pitch(sndHitRock, 0.6 + random(0.3) + (array_length(other.held) * 0.05));
+		sound_play_pitch(sndPickupDisappear, 0.6 + random(0.3) + (array_length(other.held) * 0.05));
+		sound_play_pitch(sndWaveGun, 1.2 + random(0.3) + (array_length(other.held) * 0.05))
+		instance_delete(self);
+	}
+
+
+#define BruteHold_destroy
+	if(instance_exists(creator) and array_length(held)) with(held) {
+		var o = instance_create(x, y, object_index),
+			c = other.creator;
+		call(scr.variable_instance_set_list, o, self);
+		
+		with(o) {
+			x = c.x;
+			y = c.y;
+			direction	= c.gunangle + 180 + orandom(15);
+			image_angle = direction;
+			team = c.team;
+			creator = c;
+		}
+	}
+	
+	held = [];
+	
 #define CubeGuardian_create(_x, _y)
 	with(instance_create(_x, _y, CustomEnemy)) {
 		 // Visual:
@@ -894,10 +1110,8 @@
 		 // Sound:
 		snd_hurt = snd.EliteOverseerHurt;
 		snd_dead = snd.EliteOverseerDead;
-		
-		sound_play_pitch(snd.EliteOverseerEnter, 1 + random(0.3));
 
-		maxhealth   = 256;
+		maxhealth   = 200;
 		
 		return self;
 	}
@@ -906,28 +1120,46 @@
 	alarm1 = 20 + irandom(20);
 	
 	if(enemy_target(x, y)) {
-		if(target_visible and (target_distance <= 64 xor chance(3, 4))) {
-			if(target_distance < 200) {
-				alarm1 = 15 + irandom(5);
-				gunangle = target_direction + orandom(10);
-				
-				if(fork()) {
-					repeat(5) {
-						if(!instance_exists(self)) exit;
-						call(scr.projectile_create, self, x, y, IDPDBullet, gunangle + orandom(4), 8);
-						sound_play_pitch(sndRogueRifle, 1 + random(0.3));
-						sound_play_pitch(sndHyperRifle, 0.6 + random(0.3));
-						wkick += 3;
-						
-						wait 2;
-					}
+		if(target_visible) {
+			if(!seen) {
+				seen = 1;
+				sound_play_pitch(snd.EliteOverseerEnter, 1 + random(0.3));
+			}
+			
+			if(target_distance <= 64 xor chance(3, 4)) {
+				if(target_distance < 200) {
+					alarm1 = 15 + irandom(5);
+					gunangle = target_direction + orandom(10);
 					
-					exit;
+					if(fork()) {
+						repeat(5) {
+							if(!instance_exists(self)) exit;
+							call(scr.projectile_create, self, x, y, IDPDBullet, gunangle + orandom(4), 8);
+							sound_play_pitch(sndRogueRifle, 1 + random(0.3));
+							sound_play_pitch(sndHyperRifle, 0.6 + random(0.3));
+							wkick += 3;
+							
+							wait 2;
+						}
+						
+						exit;
+					}
+				}
+			}
+			
+			else if(seen and chance(1, 3)) {
+				var _angDir = target_direction;
+				sound_play_pitch(snd.EliteOverseerAim, 1 + random(0.3));
+				with(call(scr.projectile_create, self, target.x + orandom(12), target.y + orandom(12), "OverseerStrike", _angDir + choose(60, -60) + orandom(10))) {
+					sprite_index = sprRogueStrikeTB;
+					payload = [PopoExplosion, sndExplosionL, snd.EliteOverseerAim];
+					scale   = 1;
+					angle_speed = sign(angle_difference(image_angle, _angDir)) * 4;
 				}
 			}
 		}
 		
-		else if(chance(1, 3)) {
+		else if(seen and chance(1, 3)) {
 			var _angDir = target_direction;
 			sound_play_pitch(snd.EliteOverseerAim, 1 + random(0.3));
 			with(call(scr.projectile_create, self, target.x + orandom(12), target.y + orandom(12), "OverseerStrike", _angDir + choose(60, -60) + orandom(10))) {
@@ -1090,7 +1322,7 @@
 #define EliteSniper_draw
 	if(alarm2) {
 		draw_set_color(make_color_rgb(250, 54, 0));
-		draw_lasersight(x, y, gunangle, 1000, 1);
+		draw_lasersight(x, y, gunangle, 1000, 3);
 		draw_set_color(c_white);
 	}
 
@@ -1196,8 +1428,8 @@
 		depth      = -2;
 
 		 // Sound:
-		snd_hurt = sndMolefishHurt;
-		snd_dead = sndMolefishDead;
+		snd_hurt = snd.HeavyBanditHurt;
+		snd_dead = snd.HeavyBanditDead;
 		
 		 // Vars:
 		mask_index  = mskBandit;
@@ -1243,6 +1475,7 @@
 				alarm2 = 16 + irandom(8);
 				
 				sound_play_pitchvol(sndSwapPistol, 1.2 + random(0.2), 0.4);
+				sound_play_pitchvol(snd.HeavyBanditWarn, 1 + random(0.2), 1);
 			}
 			
 			else {
@@ -1283,7 +1516,7 @@
 				gunangle += orandom(20);
 			}
 			
-			call(scr.projectile_create, self, x, y, EnemyBullet1, gunangle, 4);
+			call(scr.projectile_create, self, x, y, EnemyBullet1, gunangle, 6);
 			sound_play_pitch(sndEnemyFire, 1 + random(0.2));
 			direction = gunangle;
 			motion_add(direction + 180, 1);
@@ -1312,9 +1545,9 @@
 		sprite_index = spr_idle;
 		
 		 // Sound:
-		snd_hurt = sndJockHurt;
-		snd_dead = sndJockDead;
-		snd_mele = sndRhinoFreakMelee;
+		snd_hurt = snd.KnightHurt;
+		snd_dead = snd.KnightHurt;
+		snd_mele = snd.KnightWarn;
 		
 		 // Vars:
 		mask_index  = mskRhinoFreak;
@@ -1385,7 +1618,7 @@
 	call(scr.projectile_create, self, x + lengthdir_x(28, gunangle), y + lengthdir_y(28, gunangle), "KnightQuake", gunangle, 4);
 	call(scr.projectile_create, self, x + lengthdir_x(28, gunangle + offset), y + lengthdir_y(28, gunangle + offset), "KnightQuake", gunangle + offset, 4);
 	
-	sound_play_pitch(snd_mele, 0.8 + random(0.3));
+	sound_play_pitch(snd.KnightFire, 0.8 + random(0.3));
 	sound_play_pitch(sndHammer, 0.7 + random(0.3));
 	motion_add(gunangle, 4);
 	wepangle *= -1;
@@ -1416,9 +1649,9 @@
 		sprite_index = spr_idle;
 		
 		 // Sound:
-		snd_hurt = sndComputerBreak;
-		snd_dead = sndConfetti5;
-		snd_mele = sndBallMamaFire;
+		snd_hurt = snd.ImpHurt;
+		snd_dead = snd.ImpDead;
+		snd_mele = snd.ImpFly;
 		
 		 // Vars:
 		mask_index  = mskBandit;
@@ -1485,7 +1718,8 @@
 			else{
 				alarm1 = 30 + irandom(15);
 				enemy_walk(gunangle + 180 + orandom(30), alarm1 - 10);
-				sound_play_pitch(sndRavenLift, 1.8 + random(0.3));
+				sound_play_pitch(sndJungleAssassinPretend, 1.8 + random(0.3));
+				sound_play_pitch(snd.ImpFly, 1 + random(0.3));
 				sprite_index = spr_dash;
 			}
 		}
@@ -1497,21 +1731,8 @@
 		enemy_look(direction);
 	}
 
-#define Imp_hurt(_hitdmg, _hitvel, _hitdir)
-	my_health -= _hitdmg;			// Damage
-	motion_add(_hitdir, _hitvel);	// Knockback
-	nexthurt = current_frame + 6;	// I-Frames
-	call(scr.sound_play_at, x, y, snd_hurt, 1.6 + random(0.3), 1, 64, 1);  // Sound
-
-	 // Hurt Sprite:
-	sprite_index = spr_hurt;
-	image_index = 0;
-
 #define Imp_death
     pickup_drop(40, 0, 2);
-    
-    sound_play_pitchvol(snd_dead, 1.8 + random(0.3), 1.3);
-	snd_dead = -1;
 
 #define Imp_draw
 	if(gunangle <= 180) draw_weapon(spr_weap, 0, x, y, gunangle, wepangle, wkick, 1, image_blend, image_alpha);
@@ -1664,7 +1885,7 @@
 		
 		 // Vars:
 		mask_index  = mskBandit;
-		maxhealth   = 156;
+		maxhealth   = 120;
 		raddrop     = 0;
 		size        = 1;
 		walk	    = 0;
@@ -1674,6 +1895,7 @@
 		direction   = gunangle;
 		team		= 3;
 		exit_portal = noone;
+		seen        = 0;
 		
 		 // Alarms:
 		alarm1 = 50 + irandom(20);
@@ -1708,11 +1930,13 @@
 		sound_play_pitch(sndIDPDNadeExplo, 1 + random(0.3));
 	}
 	
-	if(my_health - _damage <= maxhealth * 0.4 and my_health > maxhealth * 0.25) {
+	if(name != "EliteOverseer" and my_health - _damage <= maxhealth * 0.25 and my_health > maxhealth * 0.25) {
 		var _x = x,
 			_y = y,
 			_c = id;
-		move_contact_solid(random(360), 200);
+		move_contact_solid(direction + 180, 400);
+		
+		if(point_distance(x, y, _x, _y) < 48) move_contact_solid(direction, 400);
 		
 		with(instance_nearest(x, y, Floor)) {
 			with(call(scr.obj_create, x + sprite_get_xoffset(sprite_index), y + sprite_get_yoffset(sprite_index), "OverseerPortal")) {
@@ -1728,6 +1952,9 @@
 			}
 		}
 		
+		walk   = 0;
+		alarm2 = 50;
+		
 		x = _x;
 		y = _y;
 	}
@@ -1738,27 +1965,43 @@
 	alarm1 = 30 + irandom(20);
 	
 	if(enemy_target(x, y)) {
-		if(target_visible and (target_distance <= 48 xor chance(3, 4))) {
-			if(target_distance < 156) {
-				alarm1 = 5 + irandom(5);
-				gunangle = target_direction + orandom(10);
-				
-				if(fork()) {
-					repeat(2) {
-						if(!instance_exists(self)) exit;
-						call(scr.projectile_create, self, x, y, IDPDBullet, gunangle + orandom(4), 8);
-						sound_play_pitch(sndRogueRifle, 1 + random(0.3));
-						wkick += 3;
-						
-						wait 2;
-					}
+		if(target_visible) {
+			if(!seen) {
+				seen = 1;
+				sound_play_pitch(snd.IDPDOverseerEnter, 1 + random(0.3));
+			}
+			
+			
+			if((target_distance <= 48 xor chance(3, 4))) {
+				if(target_distance < 156) {
+					alarm1 = 5 + irandom(5);
+					gunangle = target_direction + orandom(10);
 					
-					exit;
+					if(fork()) {
+						repeat(2) {
+							if(!instance_exists(self)) exit;
+							call(scr.projectile_create, self, x, y, IDPDBullet, gunangle + orandom(4), 8);
+							sound_play_pitch(sndRogueRifle, 1 + random(0.3));
+							wkick += 3;
+							
+							wait 2;
+						}
+						
+						exit;
+					}
+				}
+			}
+			
+			else if(seen and chance(1, 3)) {
+				var _angDir = target_direction;
+				sound_play_pitch(snd.IDPDOverseerAim, 1 + random(0.3));
+				with(call(scr.projectile_create, self, target.x + orandom(12), target.y + orandom(12), "OverseerStrike", _angDir + choose(60, -60) + orandom(10))) {
+					angle_speed = sign(angle_difference(image_angle, _angDir)) * 4;
 				}
 			}
 		}
 		
-		else if(chance(1, 3)) {
+		else if(seen and chance(1, 3)) {
 			var _angDir = target_direction;
 			sound_play_pitch(snd.IDPDOverseerAim, 1 + random(0.3));
 			with(call(scr.projectile_create, self, target.x + orandom(12), target.y + orandom(12), "OverseerStrike", _angDir + choose(60, -60) + orandom(10))) {
@@ -1851,9 +2094,6 @@
 	sound_play(sndUseVan);
 	
 	instance_destroy();
-	
-#define OverseerPortal_destroy
-	global.law_enforcement = [1, 1];
 
 #define OverseerStrike_create(_x, _y)
 	with(instance_create(_x, _y, CustomObject)) {
@@ -2077,7 +2317,7 @@
 	speed = minspeed;
 	
 #define RelicsPlasma_hit
-	if(projectile_canhit(other)){
+	if(projectile_canhit_np(other)){
 		projectile_hit_push(other, round(damage * image_xscale), force);
 		
 		 // Shrink:
@@ -2506,17 +2746,33 @@
 #define ShieldSpider_death
 	repeat(2) pickup_drop(70, 10, 2);
 	
-	for(var i = 0; i < 8; i++) {
-		with(call(scr.projectile_create, self, x, y, "RelicsPlasma", i * 45, 1)) {
-			sprite_index = spr.ShieldSpiderPlasma;
-			spr_dead	 = spr.ShieldSpiderPlasmaImpact;
-			spr_trail    = spr.ShieldSpiderPlasmaTrail;
+	with(call(scr.projectile_create, self, x, y, PlasmaImpact, 0, 0)){
+		sprite_index = spr.ShieldSpiderPlasmaImpact;
+		mask_index = mskPopoPlasmaImpact;
+		
+		if(fork()) {
+			var _pos = [x, y];
+			wait 10;
+			
+			for(var i = 0; i < 8; i++) {
+				with(call(scr.projectile_create, self, x, y, "RelicsPlasma", i * 45, 1)) {
+					sprite_index = spr.ShieldSpiderPlasma;
+					spr_dead	 = spr.ShieldSpiderPlasmaImpact;
+					spr_trail    = spr.ShieldSpiderPlasmaTrail;
+				}
+				view_shake_at(x, y, 10);
+				sleep(10);
+			}
+			
+			sound_play_pitch(sndPlasmaBigExplode, 1.2 + random(0.3));
+			
+			exit;
 		}
-		view_shake_at(x, y, 10);
-		sleep(10);
 	}
 	
-	sound_play_pitch(sndPlasmaBigExplode, 1.2 + random(0.3));
+	sound_play_pitch(sndPlasmaRifleUpg, 0.6 + random(0.3));
+	
+	
 
 #define Thief_create(_x, _y)
 	with(instance_create(_x, _y, CustomEnemy)) {
@@ -2660,6 +2916,150 @@
 	repeat(ceil(stolen * 0.6)) {
 		pickup_drop(100, 0);
 	}
+	
+#define WepTurret_create(_x, _y)
+	with(instance_create(_x, _y, CustomHitme)){
+		 // Visual:
+		spr_spwn     = spr.SentryPlce;
+		spr_idle     = spr.SentryIdle;
+		spr_walk     = spr_idle;
+		spr_hurt     = spr.SentryHurt;
+		spr_dead     = spr.SentryDead;
+		spr_fire     = spr.SentryFire;
+		spr_shadow   = shd24;
+		spr_shadow_y = -1;
+		depth        = -2;
+		sprite_index = spr_spwn;
+		image_speed  = 0.4;
+		
+		 // Sound:
+		snd_hurt = sndTurretHurt;
+		snd_dead = sndTurretDead;
+		
+		 // Vars:
+		mask_index  = mskBandit;
+		maxhealth   = 40;
+		my_health   = maxhealth;
+		team		= 2;
+		size		= 1;
+		right		= choose(1, -1);
+		image_xscale = right;
+		maxspeed	= 0;
+		gunangle    = random(360);
+		wep 		= wep_none;
+		ammo		= 0;
+		maxammo		= 0;
+		curse		= 0;
+		creator     = noone;
+		target      = noone;
+		prompt      = noone;
+		shine       = 0;
+		
+		alarm1 = 20 + irandom(10);
+		
+		return self;
+	}
+	
+#define WepTurret_step
+	if(alarm1_run) exit;
+
+	hitme_step();
+	
+	x = xstart;
+	y = ystart;
+	speed = 0;
+	
+	shine -= current_time_scale;
+	
+	if(ammo < maxammo) {
+		if(current_frame mod 60 = 0 and instance_exists(creator) and creator.object_index = Player and point_distance(x, y, creator.x, creator.y) < 64) with(creator) {
+			if(ammo[weapon_get_type(other.wep)] >= weapon_get_cost(other.wep) and 
+			  (weapon_get_type(other.wep) != weapon_get_type(wep) or ammo[weapon_get_type(other.wep)] >= weapon_get_cost(wep) * 3)) {
+				ammo[weapon_get_type(other.wep)] -= weapon_get_cost(other.wep);
+				other.ammo += weapon_get_cost(other.wep);
+				
+				sound_play_pitch(sndPickupDisappear, 1.4 + random(0.2));
+				sound_play_pitch(sndAmmoPickup, 0.7 + random(0.2));
+				other.shine = 7;
+				//sound_play_pitch(sndTurretHurt, 1.7 + random(0.2));
+			}
+		}
+		
+		
+		if(chance_ct(maxammo - max(ammo, maxammo * 0.7), maxammo)) {
+			call(scr.fx, x, y, 2 + random(1), SmokeOLD).depth = depth - 1;
+			if(ammo <= (maxammo * 0.4) and chance(1, 12)) {
+				call(scr.fx, x + orandom(6), y + orandom(6), 0, PortalL).depth = depth - 1;
+				sound_play_pitchvol(sndLightningHit, 0.6 + random(0.3), 0.5);
+			}
+		}
+	}
+	
+	if(curse and chance_ct(1, 2)) {
+		call(scr.fx, x, y, 0, Curse).depth = depth - 1;
+	}
+	
+	if(sprite_index != spr_spwn and sprite_index != spr_fire) sprite_index = enemy_sprite;
+	else if(anim_end) sprite_index = spr_idle;
+	
+	 // Death:
+	if(my_health <= 0) instance_destroy();
+
+#define WepTurret_alrm1
+	alarm1 = 10 + irandom(10);
+	
+	if(ammo > 0) {
+		if(instance_exists(hitme)) {
+			target = call(scr.instance_nearest_array, x, y, instances_matching_ne(instances_matching_ne(hitme, "team", team), "id", prompt));
+			
+			if(instance_exists(target) and !collision_line(x, y, target.x, target.y, Wall, false, false)) {
+				gunangle = point_direction(x, y, target.x, target.y);
+				call(scr.obj_fire, gunangle, wep, x, y, instance_exists(creator) ? creator : self, false);
+				alarm1 = max(1, ceil(weapon_get_load(wep) * 0.90));
+				ammo   = max(0, ammo - weapon_get_cost(wep));
+				if(sprite_index != spr_hurt) sprite_index = spr_fire;
+				sound_play_pitch(sndTurretFire, 1.5 + random(0.2));
+				
+				if(ammo <= 0) {
+					sound_play_pitch(sndEmpty, 1.2 + random(0.2));
+				}
+			}
+		}
+	}
+
+#define WepTurret_hurt(_hitdmg, _hitvel, _hitdir)
+	my_health -= _hitdmg;          // Damage
+	sound_play_hit(snd_hurt, 0.3); // Sound
+	nexthurt = current_frame + 6;
+
+	 // Hurt Sprite:
+	sprite_index = spr_hurt;
+	image_index = 0;
+	
+#define WepTurret_pick
+	instance_destroy();
+	
+#define WepTurret_destroy
+	corpse_drop(self, 0, 0);
+	sound_play_pitch(snd_dead, 1 + random(0.3));
+	with(instance_create(x, y, WepPickup)) {
+		wep = other.wep;
+		roll = 1;
+		ammo = 0;
+		curse = other.curse;
+	}
+	
+	if(instance_exists(creator)) with(creator) {
+		if(object_index = Player) {
+			var _t = other;
+			ammo[weapon_get_type(_t.wep)] += ceil(other.ammo * 0.75);
+			
+			with(instance_create(x, y, PopupText)) {
+				text = `+${_t.ammo} ${other.typ_name[weapon_get_type(_t.wep)]}`
+			}
+		}
+	}
+	
 //#endregion
 
 
@@ -2672,6 +3072,7 @@
 		spr_walk     = variable_instance_get(spr, `${_t}DozerMove`);
 		spr_hurt     = variable_instance_get(spr, `${_t}DozerHurt`);
 		spr_dead     = mskNone;
+		hitid		 = [spr_idle, "BULLDOZER"];
 		spr_shadow   = shd64B;
 		spr_shadow_y = 7;
 		depth        = -3;
@@ -2686,7 +3087,7 @@
 		mask_index  = mskLast;
 		maxhealth   = 128;
 		my_health   = maxhealth;
-		team		= 1;
+		team		= 0;
 		size		= 3;
 		right		= choose(1, -1);
 		spr_shadow_x = -4 * right;
@@ -2710,7 +3111,7 @@
 	}
 	
 
-	if(my_health > ceil(maxhealth * 0.4)) {
+	if(my_health > ceil(maxhealth * 0.6)) {
 		x = xstart;
 		y = ystart;
 		speed = 0;
@@ -2731,7 +3132,17 @@
 		}
 		
 		direction = 90 - (90 * right);
-		motion_add(direction, min(0.2, maxspeed - speed))
+		motion_add(direction, min(0.2, maxspeed - speed));
+		
+		with(call(scr.instances_meeting, x + hspeed, y + vspeed, hitme)) {
+			var _h = self;
+			with(other) {
+				if(projectile_canhit_np(_h)) {
+					projectile_hit_np(_h, 2, 1, 10);
+					if("lasthit" in _h) lasthit = hitid;
+				}
+			}
+		}
 	}
 	
 	sprite_index = enemy_sprite;
@@ -2740,13 +3151,14 @@
 	if(my_health <= 0) instance_destroy();
 
 #define Dozer_hurt(_hitdmg, _hitvel, _hitdir)
-	if(my_health > ceil(maxhealth * 0.4) and my_health - _hitdmg < ceil(maxhealth * 0.4)) {
+	if(my_health > ceil(maxhealth * 0.4) and my_health - _hitdmg < ceil(maxhealth * 0.6)) {
 		sound_play(snd.DozerStart);
 		repeat(10) call(scr.fx, x - (24 * right), y, [90 + (90 * right) + orandom(20), 1 + random(2)], Smoke);
 	}
 	
 	my_health -= _hitdmg;          // Damage
 	sound_play_hit(snd_hurt, 0.3); // Sound
+	nexthurt = current_frame + 6;
 
 	 // Hurt Sprite:
 	sprite_index = spr_hurt;
@@ -2808,6 +3220,7 @@
 	else {
 		my_health -= _hitdmg;          // Damage
 		sound_play_hit(snd_hurt, 0.3); // Sound
+		nexthurt = current_frame + 6;
 	
 		 // Hurt Sprite:
 		sprite_index = spr_hurt;
@@ -2825,7 +3238,7 @@
 	return "SIRENS BLARE"
 	
 #define LawEnforcement_chance
-	return ((area_current[0] = area_hq ? 1 : 0.1) * (global.law_enforcement[0] * loop_current));
+	return ((area_current[0] = area_hq ? 1 : 0.1) * (global.law_enforcement and global.law_enforcement < loop_current));
 
 #define LawEnforcement_create
 	with(call(scr.floor_room_start, 10016, 10016, 256, Floor)){
@@ -2835,8 +3248,7 @@
 				sprite_index = sprFloor106;
 				depth = 8;
 				if(i = 12) {
-					if(area_current[0] != area_hq and !global.law_enforcement[1]) sound_play_pitch(snd.IDPDOverseerEnter, 1 + random(0.3));
-					else instance_create(x + 16, y + 16, FloorMiddle);
+					if(area_current[0] = area_hq or global.law_enforcement > 1)instance_create(x + 16, y + 16, FloorMiddle);
 					call(scr.obj_create, x + 16, y + 16, (area_current[0] = area_hq or global.law_enforcement[1]) ? "EliteOverseer" : "Overseer");
 					repeat(4) instance_create(x + 16, y + 16, Grunt);
 				}
@@ -2844,7 +3256,7 @@
 		}
 	}
 	
-	global.law_enforcement[0] = 0;
+	global.law_enforcement++;
 
 
 #define Nightfall_text
@@ -2980,7 +3392,6 @@
 #macro  msk                                                                                     spr.msk
 #macro  scr																						global.scr
 #macro  call																					script_ref_call
-#macro	variant_areas																			global.area_variants
 #macro  type_melee                                                                              0
 #macro  type_bullet                                                                             1
 #macro  type_shell                                                                              2
@@ -3224,10 +3635,10 @@
 			projectile_hit(other, meleedamage);
 		}
 		
-		with(other){
+		if("canmelee" in other and other.canmelee and "meleedamage" in other and other.meleedamage > 0) with(other){
 			if(projectile_canhit_melee(other)){
-				projectile_hit(other, 3);
-				sound_play_pitch(sndFreakMelee, 1.2 + random(0.4));
+				projectile_hit(other, meleedamage);
+				sound_play_pitch("snd_mele" in self ? snd_mele : sndFreakMelee, 1.2 + random(0.4));
 			}
 		}
 	}
