@@ -354,7 +354,7 @@
 		}
 	}
 
-#define update(_newID)
+#define end_update(_newID)
 	 // Heavy Bandit Spawns:
 	if(is_new(Bandit, _newID)){
 		with(instances_matching_gt(Bandit, "id", _newID)){
