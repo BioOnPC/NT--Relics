@@ -6,7 +6,7 @@
 		mod_script_call("mod", "lib", "import", "libAreas");
 		mod_script_call("mod", "lib", "import", "libEvents");
 		mod_script_call("mod", "lib", "import", "libAutoUpdate");
-		while(!mod_exists("mod", "libGeneral") and !mod_exists("mod", "libAreas") and !mod_exists("mod", "libEvents") and !mod_exists("mod", "libAutoUpdate")){wait(1);}
+		while(!mod_exists("mod", "libGeneral") or !mod_exists("mod", "libAreas") or !mod_exists("mod", "libEvents") or !mod_exists("mod", "libAutoUpdate")){wait(1);}
 		
 		global.libLoaded = true;
 		
@@ -495,7 +495,7 @@
 		}
 	}
 
-#define end_update(_newID)
+#define update(_newID)
 	 // Heavy Bandit Spawns:
 	if(is_new(Bandit, _newID)){
 		with(instances_matching_gt(Bandit, "id", _newID)){
@@ -2953,6 +2953,7 @@
 		creator     = noone;
 		target      = noone;
 		prompt      = noone;
+		prmpt       = noone;
 		shine       = 0;
 		
 		alarm1 = 20 + irandom(10);
@@ -2970,6 +2971,23 @@
 	speed = 0;
 	
 	shine -= current_time_scale;
+	
+	if(instance_exists(creator) && instance_exists(prmpt)){
+		prmpt.text = "DESTROY";
+	}
+	
+	with(creator){
+		if(instance_place(x,y,Portal)){
+			with(other){
+				xstart = creator.x;
+				ystart = creator.y;
+				x = xstart;
+				y = ystart;
+				instance_destroy();
+				exit;
+			}
+		}
+	}
 	
 	if(ammo < maxammo) {
 		if(current_frame mod 60 = 0 and instance_exists(creator) and creator.object_index = Player and point_distance(x, y, creator.x, creator.y) < 64) with(creator) {
@@ -3012,10 +3030,25 @@
 		if(instance_exists(hitme)) {
 			target = call(scr.instance_nearest_array, x, y, instances_matching_ne(instances_matching_ne(hitme, "team", team), "id", prompt));
 			
+			if(instance_exists(target)){
+				//increase this number for more tries
+				var movedList = [];
+				repeat(2){
+					if(collision_line(x, y, target.x, target.y, Wall, false, false)){
+						array_push(movedList, target);
+						target.x += 100;
+						target = call(scr.instance_nearest_array, x, y, instances_matching_ne(instances_matching_ne(hitme, "team", team), "id", prompt));
+					}
+				}
+				with(movedList){
+					x -= 100;
+				}
+			}
+			
 			if(instance_exists(target) and !collision_line(x, y, target.x, target.y, Wall, false, false)) {
 				gunangle = point_direction(x, y, target.x, target.y);
 				call(scr.obj_fire, gunangle, wep, x, y, instance_exists(creator) ? creator : self, false);
-				alarm1 = max(1, ceil(weapon_get_load(wep) * 0.90));
+				alarm1 = max(1, ceil(weapon_get_load(wep) * 1.50));
 				ammo   = max(0, ammo - weapon_get_cost(wep));
 				if(sprite_index != spr_hurt) sprite_index = spr_fire;
 				sound_play_pitch(sndTurretFire, 1.5 + random(0.2));
@@ -3037,7 +3070,9 @@
 	image_index = 0;
 	
 #define WepTurret_pick
-	instance_destroy();
+	with(argument1){
+		instance_destroy();
+	}
 	
 #define WepTurret_destroy
 	corpse_drop(self, 0, 0);

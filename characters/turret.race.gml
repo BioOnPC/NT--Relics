@@ -24,7 +24,7 @@
 	return "GENERATES FREE @yAMMO@w#CAN CREATE @yTURRETS@s";
 
 #define race_tb_text
-	return "@dNYI@s";
+	return "@yTURRETS@s GO TO#YOUR @wCURSOR@s";
 
 #define race_portrait
 	return global.sprPort;
@@ -45,10 +45,10 @@
 
 #define race_ultra_text 
 	switch (argument0){
-		case 1: return "@dNYI@s";
+		case 1: return "#@dNYI@s";
 		case 2: return "#@dNYI@s";
 		case 3: if(mod_exists("mod", "metamorphosis")) return "#@dNYI@s";
-		case 4: if(mod_exists("mod", "LOMutsSprites")) return "@dNYI@s";
+		case 4: if(mod_exists("mod", "LOMutsSprites")) return "#@dNYI@s";
 	}
 	
 #define race_mapicon
@@ -95,19 +95,52 @@
 				a_increased++;
 			}
 			
-			
 			if(a_increased) {
-				sound_play_pitchvol(sndSwapEnergy, 1.2 + random(0.3), 0.3);
-				sound_play_pitchvol(sndAmmoChest, 1 + random(0.3), 0.3);
-				sound_play_pitchvol(sndClusterOpen, 1 + random(0.3), 0.3);
+				if(ammo[_typ] < typ_amax[_typ]/5){
+					sound_play_pitchvol(sndSwapEnergy, 1.2 + random(0.3), 0.3);
+					sound_play_pitchvol(sndAmmoChest, 1 + random(0.3), 0.3);
+					sound_play_pitchvol(sndClusterOpen, 1 + random(0.3), 0.3);
+				}
 				instance_create(x, y, BulletHit);
-				gunshine = 7;
+				if(_typ != 0){
+					gunshine = 7;
+				}
 			}
 		}
 	}
 	
 	if(canspec) {
 		if(button_pressed(index, "spec") or usespec) {
+			var posX = x + lengthdir_x(sprite_width * 0.75, gunangle);
+			var posY = y + lengthdir_y(sprite_height * 0.75, gunangle);
+			if(skill_get(mut_throne_butt)){
+				if(array_length(call(scr.instance_rectangle_bbox, mouse_x[index] - 4, mouse_y[index] - 4, mouse_x[index] + 4, mouse_y[index] + 4, Floor))){
+					posX = mouse_x[index];
+					posY = mouse_y[index];
+				}
+			}
+			var tries = 5;
+			while((!array_length(call(scr.instance_rectangle_bbox, posX-8, posY-8, posX, posY, Floor)) || 
+				array_length(call(scr.instance_rectangle_bbox, posX-8, posY-8, posX, posY, CustomHitme)) || 
+				array_length(call(scr.instance_rectangle_bbox, posX-8, posY-8, posX, posY, Wall))) && tries > 0){
+				posX += lengthdir_x(8, gunangle)
+				posY += lengthdir_y(8, gunangle)
+				tries--;
+			}
+			if(tries == 0){
+				if(!(!array_length(call(scr.instance_rectangle_bbox, x-8, y-8, x, y, Floor)) || 
+				array_length(call(scr.instance_rectangle_bbox, x-8, y-8, x, y, CustomHitme)) || 
+				array_length(call(scr.instance_rectangle_bbox, x-8, y-8, x, y, Wall)))){
+					posX = x;
+					posY = y;
+				}else{
+					posX -= lengthdir_x(40, gunangle);
+					posY -= lengthdir_y(40, gunangle);
+					var inst = instance_nearest(posX, posY, Floor);
+					posX = inst.x;
+					posY = inst.y;
+				}
+			}
 			if(ammo[weapon_get_type(wep)] >= weapon_get_cost(wep) and weapon_get_type(wep) and !weapon_is_melee(wep)) { 
 				var _ammo = min(ammo[weapon_get_type(wep)], typ_ammo[weapon_get_type(wep)] * 3);
 				
@@ -118,11 +151,12 @@
 				}
 				
 				call(scr.player_swap, self);
-				with(call(scr.obj_create, x + lengthdir_x(sprite_width * 0.75, gunangle), y + lengthdir_y(sprite_height * 0.75, gunangle), "WepTurret")) {
+				with(call(scr.obj_create, posX, posY, "WepTurret")) {
 					sprite_index = spr_spwn;
 					wep = other.bwep;
 					ammo = _ammo;
 					maxammo = ammo;
+					age = current_frame;
 					if(other.bcurse) {
 						curse = other.bcurse;
 						team  = 0;
@@ -132,7 +166,8 @@
 					
 					else {
 						creator = other;
-						call(scr.prompt_create, "DESTROY");
+						prmpt = call(scr.prompt_create, "DESTROY");
+						prmpt.creator = self;
 					}
 				}
 				
