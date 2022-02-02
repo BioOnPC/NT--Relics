@@ -517,6 +517,7 @@
 		}
 	}
 	
+#define end_update(_newID)
 	if(call(scr.event_get_active, "Nightfall")) {
 		with(instances_matching([Floor, FloorExplo, Wall, Top, TopSmall, Debris, Detail, Bones, prop, TopPot], "nightfall_check", null)) {
 			if(instance_exists(self)) with(self) {
