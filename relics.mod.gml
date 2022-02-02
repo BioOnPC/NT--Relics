@@ -6,7 +6,7 @@
 		mod_script_call("mod", "lib", "import", "libAreas");
 		mod_script_call("mod", "lib", "import", "libEvents");
 		mod_script_call("mod", "lib", "import", "libAutoUpdate");
-		while(!mod_exists("mod", "libGeneral") or !mod_exists("mod", "libAreas") or !mod_exists("mod", "libEvents") or !mod_exists("mod", "libAutoUpdate")){wait(1);}
+		while(!mod_exists("mod", "libGeneral") and !mod_exists("mod", "libAreas") and !mod_exists("mod", "libEvents") and !mod_exists("mod", "libAutoUpdate")){wait(1);}
 		
 		global.libLoaded = true;
 		
