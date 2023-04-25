@@ -2859,6 +2859,17 @@
 			enemy_walk(gunangle, alarm1 - 20);
 		}
 	}
+		
+	//If there aren't any non-thief enemies, they should "escape" (kills are still counted, but that's fair given the nature of the enemy)
+	else if(distance_to_object(Player) > 196 && stealth == 0 && array_length(instances_matching_ne(enemy, "name", "Thief")) == 0) {
+		raddrop = 0;
+		stolen = -1;
+		snd_dead = noone;
+		spr_dead = mskNone;
+		my_health = 0;
+		//POOF
+		instance_create(x,y,FXChestOpen);
+	}
 	
 	direction = gunangle;
 	enemy_face(direction);
@@ -2912,6 +2923,12 @@
 	if(gunangle > 180) draw_weapon(spr_weap, 0, x, y, gunangle, 0, wkick, right, image_blend, _vis);
 	
 #define Thief_death
+	
+	//stolen is set to -1 when the Thief "escapes"
+	if(stolen == -1){
+		return;
+	}
+	
 	pickup_drop(70, 30);
 
 	repeat(ceil(stolen * 0.6)) {
