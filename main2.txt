@@ -1,4 +1,4 @@
-/allowmod libLoader
+/allowmod LibLoader
 
 /loadmod relics
 
@@ -10,7 +10,7 @@
 /loadarea areas/castle
 
 // -- MISC -- //
-/loadsprite sprBanditIdle sprites/Enemies/Bandit/sprBanditIdle_strip4
-/loadsprite sprBanditWalk sprites/Enemies/Bandit/sprBanditWalk_strip6
-/loadsprite sprBanditHurt sprites/Enemies/Bandit/sprBanditHurt_strip3
-/loadsprite sprBanditDead sprites/Enemies/Bandit/sprBanditDead_strip6
+//loadsprite sprBanditIdle sprites/Enemies/Bandit/sprBanditIdle_strip4
+//loadsprite sprBanditWalk sprites/Enemies/Bandit/sprBanditWalk_strip6
+//loadsprite sprBanditHurt sprites/Enemies/Bandit/sprBanditHurt_strip3
+//loadsprite sprBanditDead sprites/Enemies/Bandit/sprBanditDead_strip6

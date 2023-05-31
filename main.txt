@@ -1,2 +1,2 @@
-/loadmod libLoader
+/loadmod LibLoader
 /load main2
